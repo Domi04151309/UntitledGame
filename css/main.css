@@ -480,6 +480,11 @@ pre {
 }
 
 /* game elements */
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 .full-height {
   height: 100vh;
 }
@@ -493,6 +498,7 @@ pre {
   font-size: 14px;
   color: var(--text-color-secondary);
   animation: fadeIn 2s;
+  z-index: 500;
 }
 
 /* animation */
