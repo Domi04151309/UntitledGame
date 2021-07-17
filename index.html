@@ -1,0 +1,69 @@
+---
+layout: null
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Untitled Game</title>
+  <link rel="preload" href="{{ site.baseurl }}/css/main.min.css" as="style"/>
+  <link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/css/main.min.css" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="theme-color" content="#1e1e1e">
+  <link rel="icon" href="{{ site.baseurl }}/favicon.ico">
+  <meta name="description" content="An untitled game." />
+  <meta property="og:image" content="{{ site.baseurl }}/preview.jpg">
+  <link rel="manifest" href="{{ site.baseurl }}/pwa/manifest.json">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="HandheldFriendly" content="true">
+</head>
+<body>
+  <section id="loading_screen">
+    <div id="loading_content">
+      <div class="balls">
+        <div></div><div></div><div></div><div></div>
+      </div>
+      <p>Loading</p>
+      <noscript><p style="color:#e00">Please enable JavaScript</p></noscript>
+    </div>
+  </section>
+  <div id="app">
+    <router-view></router-view>
+  </div>
+
+  <script src="{{ site.baseurl }}/js/libs/vue.min.js"></script>
+  <script src="{{ site.baseurl }}/js/libs/vue-router.min.js"></script>
+  <script src="{{ site.baseurl }}/js/index.js" type="module"></script>
+  <script>
+    let newWorker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('{{ site.baseurl }}/sw.js').then( registration => {
+           registration.addEventListener('updatefound', () => {
+            newWorker = registration.installing;
+            newWorker.addEventListener('statechange', () => {
+              switch (newWorker.state) {
+                case 'installed':
+                  if (navigator.serviceWorker.controller) {
+                    newWorker.postMessage({ action: 'skipWaiting' });
+                  }
+                  break;
+              }
+            });
+          });
+          console.log('ServiceWorker registration successful');
+        }, err => {
+          console.log('ServiceWorker registration failed: ', err);
+        });
+      });
+
+      let refreshing;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refreshing) return;
+        window.location.reload();
+        refreshing = true;
+      });
+    }
+  </script>
+</body>
