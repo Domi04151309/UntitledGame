@@ -7,8 +7,10 @@ export default class Character {
 
     this.sprites = {
       loaded: false,
-      standing: [],
-      walking: []
+      default: [],
+      left: [],
+      right: [],
+      up: []
     }
 
     this.health = 100
@@ -16,13 +18,20 @@ export default class Character {
     this.fear = 0
   }
   async loadSprites() {
-    for (const item of this.spriteInfo) {
-      this.sprites.standing.push(await ImageHelper.loadImage(item))
+    for (const category in this.spriteInfo) {
+      for (const sprite of this.spriteInfo[category]) {
+        this.sprites[category].push(await ImageHelper.loadImage(sprite))
+      }
     }
+    console.log(this.sprites)
     this.updateSprite()
     this.sprites.loaded = true
   }
-  updateSprite(category = 'standing') {
-    this.sprites.selected = this.sprites[category][Math.floor(Math.random() * this.sprites[category].length)]
+  updateSprite(category = 'default') {
+    if (this.sprites[category].length > 1) {
+      this.sprites.selected = this.sprites[category][Math.floor(Math.random() * this.sprites[category].length)]
+    } else {
+      this.sprites.selected = this.sprites[category][0]
+    }
   }
 }

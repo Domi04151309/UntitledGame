@@ -99,7 +99,12 @@ export default {
     }
   },
   created() {
-    this.character = new Character('Steve', ['./images/steve/0.png', './images/steve/1.png'])
+    this.character = new Character('Steve', {
+      default: ['./images/steve/0.png', './images/steve/1.png'],
+      left: ['./images/steve/left.png'],
+      right: ['./images/steve/right.png'],
+      up: ['./images/steve/up.png']
+    })
 
     document.addEventListener('keydown', this.onKeyDown)
     document.addEventListener('keyup', this.onKeyUp)
@@ -109,6 +114,11 @@ export default {
     this.drawingThread = setInterval(() => {
       this.x += this.movement[0] * DISTANCE_PER_FRAME
       this.y += this.movement[1] * DISTANCE_PER_FRAME
+
+      if (this.movement[1] == 1) this.character.updateSprite('up')
+      else if (this.movement[0] == -1) this.character.updateSprite('right')
+      else if (this.movement[0] == 1) this.character.updateSprite('left')
+
       this.drawMap()
     }, FRAME_DURATION)
   },
