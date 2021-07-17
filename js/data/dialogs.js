@@ -1,10 +1,12 @@
 const people = {
   steve: {
     name: 'Steve',
+    texture: './images/steve/0.png',
     color: 'red'
   },
   bruno: {
     name: 'Bruno',
+    texture: './images/bruno/0.png',
     color: 'blue'
   }
 }
@@ -12,6 +14,7 @@ const people = {
 export default {
   intro: {
     background: './images/bakery.jpg',
+    character: [people.steve, people.bruno],
     speech: [
       ['Hey Steve! Nice to meet you!', people.bruno],
       ['Hi Bruno.', people.steve],

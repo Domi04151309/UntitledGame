@@ -17,6 +17,8 @@ export default {
       <p class="card tutorial">
         Click or press enter to continue. Press backspace to go back.
       </p>
+      <img class="dialog-character left" :src="dialog.character[0].texture">
+      <img class="dialog-character right" :src="dialog.character[1].texture">
       <div class="dialog-box-container">
         <div class="card dialog-box">
           <p :class="'m-0 accent-text ' + dialog.speech[index][1].color">{{ dialog.speech[index][1].name }}</p>

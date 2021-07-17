@@ -23,7 +23,6 @@ export default class Character {
         this.sprites[category].push(await ImageHelper.loadImage(sprite))
       }
     }
-    console.log(this.sprites)
     this.updateSprite()
     this.sprites.loaded = true
   }

@@ -410,6 +410,19 @@ pre {
 }
 
 /* dialogs */
+.dialog-character {
+  position: fixed;
+  bottom: 25vh;
+  height: 50vh;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+.dialog-character.left {
+  left: 0;
+}
+.dialog-character.right {
+  right: 0;
+}
 .dialog-box-container {
   position: fixed;
   bottom: 0;
