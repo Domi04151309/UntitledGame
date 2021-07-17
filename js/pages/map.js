@@ -9,8 +9,8 @@ export default {
       ctx: null,
       map: null,
       steve: null,
-      x: 175,
-      y: -2645
+      x: -120,
+      y: -430
     }
   },
   template:
@@ -29,16 +29,16 @@ export default {
   methods: {
     onKeyDown(event) {
       if (event.keyCode == 87) {
-        this.y += 5
+        this.y += 1
         this.drawMap()
       } else if (event.keyCode == 65) {
-        this.x += 5
+        this.x += 1
         this.drawMap()
       } else if (event.keyCode == 83) {
-        this.y -= 5
+        this.y -= 1
         this.drawMap()
       } else if (event.keyCode == 68) {
-        this.x -= 5
+        this.x -= 1
         this.drawMap()
       }
     },
@@ -68,18 +68,21 @@ export default {
       if (this.map == null) await this.loadMap()
       if (this.steve == null) await this.loadSteve()
 
+      this.ctx.fillStyle = '#0D47A1'
+      this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
+
       this.ctx.imageSmoothingEnabled = false
       this.ctx.drawImage(
         this.map,
-        this.x - window.innerWidth / 2,
-        this.y - window.innerHeight / 2,
+        this.x * SCALE + window.innerWidth / 2,
+        this.y * SCALE + window.innerHeight / 2,
         SCALE * this.map.width,
         SCALE * this.map.height
       )
       this.ctx.drawImage(
         this.steve,
-        (window.innerWidth - this.steve.width) / 2,
-        (window.innerHeight - this.steve.height) / 2,
+        (window.innerWidth - this.steve.width * SCALE) / 2,
+        window.innerHeight / 2 - this.steve.height * SCALE,
         SCALE * this.steve.width,
         SCALE * this.steve.height
       )
