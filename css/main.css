@@ -19,7 +19,32 @@
   --card-shadow: 0 0 12px rgba(0, 0, 0, .2);
   --background-dim: linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)) no-repeat center;
 }
-:root {
+.red {
+  --accent-color: #ff1744;
+  --accent-color-light: #ff5252;
+  --accent-color-dark: #d50000;
+}
+.deep-purple {
+  --accent-color: #651FFF;
+  --accent-color-light: #7C4DFF;
+  --accent-color-dark: #6200EA;
+}
+.indigo {
+  --accent-color: #3D5AFE;
+  --accent-color-light: #536DFE;
+  --accent-color-dark: #304FFE;
+}
+.light-blue {
+  --accent-color: #00B0FF;
+  --accent-color-light: #40C4FF;
+  --accent-color-dark: #0091EA;
+}
+.green {
+  --accent-color: #10D030;
+  --accent-color-light: #52d854;
+  --accent-color-dark: #00bf28;
+}
+.red, .deep-purple, .indigo, :root, .light-blue, .green {
   --accent-color-gradient: linear-gradient(90deg, var(--accent-color-light), var(--accent-color), var(--accent-color-dark));
 }
 ::-webkit-scrollbar {
@@ -220,21 +245,15 @@ pre {
 }
 
 /* general elements */
+.accent-text {
+  color: var(--accent-color);
+}
 .card {
   display: block;
   border: 1px solid var(--hover-color);
   border-radius: var(--border-radius-2x);
   text-decoration: inherit;
   color: inherit;
-}
-.card > h2:first-child {
-  margin: 0 0 8px;
-}
-.card > h3:last-child {
-  margin-bottom: 0;
-}
-.card > p:last-child {
-  margin-bottom: 2px;
 }
 .link-list {
   padding: 0;
@@ -425,44 +444,61 @@ pre {
   max-width: 480px;
   animation: fadeIn 2s;
 }
-.main-menu > h1 {
+.main-menu > h1, .pause-menu > h1 {
   margin: 0 0 32px;
   font: 64px 'Leckerli One', cursive;
 }
-.main-menu > p {
+.main-menu > p, .pause-menu > p {
   margin: 32px 0;
 }
 
+/* pause menu */
+.pause-menu-container {
+  position: absolute;
+  background: var(--background-dim);
+  z-index: 1000;
+}
+.pause-menu {
+  max-width: 480px;
+}
+
+/* dialogs */
+.dialog-box-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 16px;
+  text-align: center;
+}
+.dialog-box {
+  display: inline-block;
+  width: 100%;
+  max-width: 720px;
+  padding: 16px;
+  font-size: 18px;
+}
+
+/* game elements */
+.full-height {
+  height: 100vh;
+}
+.tutorial {
+  display: inline-block;
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin: 16px;
+  padding: 8px 16px;
+  font-size: 14px;
+  color: var(--text-color-secondary);
+  animation: fadeIn 2s;
+}
+
 /* animation */
-.zoom-in-animation {
-  animation: zoomIn .3s;
-}
-.fade-in-animation {
-  animation: fadeIn .5s;
-}
-.fade-in-secondary-animation {
-  animation: fadeInSecondary .5s;
-}
-@keyframes zoomIn {
-  0% {
-    transform: scale3d(.95, .95, .95);
-  }
-}
 @keyframes fadeIn {
   0%{
     opacity: 0;
-  }
-}
-@keyframes fadeInSecondary {
-  0%{
-    opacity: 0;
-    transform: translateY(+16px);
-  }
-}
-@keyframes fadeInSecondaryModal {
-  0%{
-    opacity: 0;
-    transform: translate(-50%, calc(16px - 50%));
   }
 }
 

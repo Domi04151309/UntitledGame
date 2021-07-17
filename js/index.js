@@ -4,12 +4,16 @@ import JsonHelper from './helpers/json.js'
 
 const Unknown = () => import('./pages/unknown.js')
 const Main = () => import('./pages/main.js')
+const Dialog = () => import('./pages/dialog.js')
+const Map = () => import('./pages/map.js')
 
 Vue.config.devtools = location.hostname == 'localhost'
 
 const routes = [
   { path: '*', component: Unknown },
-  { path: '/', component: Main }
+  { path: '/', component: Main },
+  { path: '/d/:state', component: Dialog },
+  { path: '/m/:state', component: Map }
 ]
 
 function logError(e) {
