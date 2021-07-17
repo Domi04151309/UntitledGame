@@ -1,16 +1,21 @@
 import Menu from '../components/menu.js'
 
-const SCALE = 8
+const FRAMERATE = 60
+const DISTANCE_PER_FRAME = 20 / FRAMERATE
+const FRAME_DURATION = 1000 / FRAMERATE
 
 export default {
   name: 'map',
   data() {
     return {
+      running: null,
       ctx: null,
       map: null,
       steve: null,
+      scale: 10,
       x: -120,
-      y: -430
+      y: -430,
+      movement: [0, 0]
     }
   },
   template:
@@ -28,24 +33,22 @@ export default {
   },
   methods: {
     onKeyDown(event) {
-      if (event.keyCode == 87) {
-        this.y += 1
-        this.drawMap()
-      } else if (event.keyCode == 65) {
-        this.x += 1
-        this.drawMap()
-      } else if (event.keyCode == 83) {
-        this.y -= 1
-        this.drawMap()
-      } else if (event.keyCode == 68) {
-        this.x -= 1
-        this.drawMap()
-      }
+      if (event.keyCode == 87) this.movement[1] = 1
+      else if (event.keyCode == 65) this.movement[0] = 1
+      else if (event.keyCode == 83) this.movement[1] = -1
+      else if (event.keyCode == 68) this.movement[0] = -1
+    },
+    onKeyUp(event) {
+      if (event.keyCode == 87 || event.keyCode == 83) this.movement[1] = 0
+      else if (event.keyCode == 65 || event.keyCode == 68) this.movement[0] = 0
+    },
+    onWheel(event) {
+      if (event.deltaY > 0 && this.scale > 4) this.scale -= 1
+      else if (event.deltaY < 0 && this.scale < 40) this.scale += 1
     },
     windowResize() {
       this.$refs.canvas.width = window.innerWidth
       this.$refs.canvas.height = window.innerHeight
-      this.drawMap()
     },
     loadMap() {
       return new Promise((resolve, reject) => {
@@ -74,30 +77,47 @@ export default {
       this.ctx.imageSmoothingEnabled = false
       this.ctx.drawImage(
         this.map,
-        this.x * SCALE + window.innerWidth / 2,
-        this.y * SCALE + window.innerHeight / 2,
-        SCALE * this.map.width,
-        SCALE * this.map.height
+        this.x * this.scale + window.innerWidth / 2,
+        this.y * this.scale + window.innerHeight / 2,
+        this.scale * this.map.width,
+        this.scale * this.map.height
       )
       this.ctx.drawImage(
         this.steve,
-        (window.innerWidth - this.steve.width * SCALE) / 2,
-        window.innerHeight / 2 - this.steve.height * SCALE,
-        SCALE * this.steve.width,
-        SCALE * this.steve.height
+        (window.innerWidth - this.steve.width * this.scale) / 2,
+        window.innerHeight / 2 - this.steve.height * this.scale,
+        this.scale * this.steve.width,
+        this.scale * this.steve.height
       )
-      console.log(this.x + ' ' + this.y)
+      //console.log(this.x + ' ' + this.y)
     }
   },
   created() {
     document.addEventListener('keydown', this.onKeyDown)
+    document.addEventListener('keyup', this.onKeyUp)
+    document.addEventListener('wheel', this.onWheel)
     window.addEventListener('resize', this.windowResize)
+
+    if (this.running == null) {
+      this.running = setInterval(() => {
+        this.x += this.movement[0] * DISTANCE_PER_FRAME
+        this.y += this.movement[1] * DISTANCE_PER_FRAME
+        this.drawMap()
+      }, FRAME_DURATION)
+    }
   },
   mounted() {
     this.windowResize()
   },
   beforeDestroy() {
     document.removeEventListener('keydown', this.onKeyDown)
-    window.removeEventListener('resize', this.windowResize);
+    document.removeEventListener('keyup', this.onKeyUp)
+    document.removeEventListener('wheel', this.onWheel)
+    window.removeEventListener('resize', this.windowResize)
+
+    if (this.running != null) {
+      clearInterval(this.running)
+      this.running = null
+    }
   }
 }
