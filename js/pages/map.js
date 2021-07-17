@@ -1,29 +1,36 @@
 import Menu from '../components/menu.js'
 import Stats from '../components/stats.js'
 
+import Character from '../data/character.js'
+import ImageHelper from '../helpers/image.js'
+
 const FRAMERATE = 60
-const DISTANCE_PER_FRAME = 20 / FRAMERATE
+const DISTANCE_PER_FRAME = 5 * 8 / FRAMERATE
 const FRAME_DURATION = 1000 / FRAMERATE
+const ENTITY_SIZE = 16
 
 export default {
   name: 'map',
   data() {
     return {
-      running: null,
+      drawingThread: null,
       ctx: null,
       map: null,
-      steve: null,
-      scale: 10,
-      x: -120,
-      y: -430,
-      movement: [0, 0]
+      character: null,
+      scale: 5,
+      x: -1360,
+      y: -870,
+      movement: [0, 0],
+      frameCounter: 0,
+      randomOffset: 0,
+      drawing: false
     }
   },
   template:
   `<div>
     <Menu></Menu>
     <main class="full-height">
-      <Stats></Stats>
+      <Stats :character="character"></Stats>
       <p class="card tutorial">
         Use WASD to move
       </p>
@@ -40,41 +47,29 @@ export default {
       else if (event.keyCode == 65) this.movement[0] = 1
       else if (event.keyCode == 83) this.movement[1] = -1
       else if (event.keyCode == 68) this.movement[0] = -1
+      else if (event.keyCode == 80) console.log({ x: Math.round(this.x), y: Math.round(this.y), scale: Math.round(this.scale) })
     },
     onKeyUp(event) {
       if (event.keyCode == 87 || event.keyCode == 83) this.movement[1] = 0
       else if (event.keyCode == 65 || event.keyCode == 68) this.movement[0] = 0
     },
     onWheel(event) {
-      if (event.deltaY > 0 && this.scale > 4) this.scale -= 1
-      else if (event.deltaY < 0 && this.scale < 40) this.scale += 1
+      if (event.deltaY > 0 && this.scale > 1) this.scale -= 1
+      else if (event.deltaY < 0 && this.scale < 20) this.scale += 1
     },
     windowResize() {
       this.$refs.canvas.width = window.innerWidth
       this.$refs.canvas.height = window.innerHeight
     },
-    loadMap() {
-      return new Promise((resolve, reject) => {
-        this.map = new Image()
-        this.map.onload = resolve
-        this.map.onerror = reject
-        this.map.src = './images/map.png'
-      })
-    },
-    loadSteve() {
-      return new Promise((resolve, reject) => {
-        this.steve = new Image()
-        this.steve.onload = resolve
-        this.steve.onerror = reject
-        this.steve.src = './images/steve.png'
-      })
-    },
     async drawMap() {
-      if (this.ctx == null) this.ctx = this.$refs.canvas.getContext('2d')
-      if (this.map == null) await this.loadMap()
-      if (this.steve == null) await this.loadSteve()
+      if (this.drawing) return
 
-      this.ctx.fillStyle = '#0D47A1'
+      this.drawing = true
+      if (this.ctx == null) this.ctx = this.$refs.canvas.getContext('2d')
+      if (this.map == null) this.map = await ImageHelper.loadImage('./images/map.png')
+      if (!this.character.sprites.loaded) await this.character.loadSprites()
+
+      this.ctx.fillStyle = '#1C50F1'
       this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
 
       this.ctx.imageSmoothingEnabled = false
@@ -86,28 +81,36 @@ export default {
         this.scale * this.map.height
       )
       this.ctx.drawImage(
-        this.steve,
-        (window.innerWidth - this.steve.width * this.scale) / 2,
-        window.innerHeight / 2 - this.steve.height * this.scale,
-        this.scale * this.steve.width,
-        this.scale * this.steve.height
+        this.character.sprites.selected,
+        (window.innerWidth - ENTITY_SIZE * this.scale) / 2 + this.randomOffset,
+        window.innerHeight / 2 - ENTITY_SIZE * this.scale,
+        this.scale * ENTITY_SIZE,
+        this.scale * ENTITY_SIZE
       )
-      //console.log(this.x + ' ' + this.y)
+
+      this.frameCounter++
+      if (this.frameCounter > FRAMERATE * 2) {
+        this.frameCounter = 0
+        this.randomOffset = Math.round(Math.random() * 4)
+        this.character.updateSprite()
+      }
+
+      this.drawing = false
     }
   },
   created() {
+    this.character = new Character('Steve', ['./images/steve/0.png', './images/steve/1.png'])
+
     document.addEventListener('keydown', this.onKeyDown)
     document.addEventListener('keyup', this.onKeyUp)
     document.addEventListener('wheel', this.onWheel)
     window.addEventListener('resize', this.windowResize)
 
-    if (this.running == null) {
-      this.running = setInterval(() => {
-        this.x += this.movement[0] * DISTANCE_PER_FRAME
-        this.y += this.movement[1] * DISTANCE_PER_FRAME
-        this.drawMap()
-      }, FRAME_DURATION)
-    }
+    this.drawingThread = setInterval(() => {
+      this.x += this.movement[0] * DISTANCE_PER_FRAME
+      this.y += this.movement[1] * DISTANCE_PER_FRAME
+      this.drawMap()
+    }, FRAME_DURATION)
   },
   mounted() {
     this.windowResize()
@@ -118,9 +121,6 @@ export default {
     document.removeEventListener('wheel', this.onWheel)
     window.removeEventListener('resize', this.windowResize)
 
-    if (this.running != null) {
-      clearInterval(this.running)
-      this.running = null
-    }
+    clearInterval(this.drawingThread)
   }
 }
