@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Leckerli+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+
 :root {
   --accent-color: #2979FF;
   --accent-color-light: #448AFF;
@@ -14,34 +17,9 @@
   --border-radius-2x: 16px;
   --border-radius-4x: 32px;
   --card-shadow: 0 0 12px rgba(0, 0, 0, .2);
-  --background-dim: linear-gradient(rgba(0, 0, 0, .25), rgba(0, 0, 0, .25)) no-repeat center;
+  --background-dim: linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)) no-repeat center;
 }
-.red {
-  --accent-color: #ff1744;
-  --accent-color-light: #ff5252;
-  --accent-color-dark: #d50000;
-}
-.deep-purple {
-  --accent-color: #651FFF;
-  --accent-color-light: #7C4DFF;
-  --accent-color-dark: #6200EA;
-}
-.indigo {
-  --accent-color: #3D5AFE;
-  --accent-color-light: #536DFE;
-  --accent-color-dark: #304FFE;
-}
-.light-blue {
-  --accent-color: #00B0FF;
-  --accent-color-light: #40C4FF;
-  --accent-color-dark: #0091EA;
-}
-.green {
-  --accent-color: #10D030;
-  --accent-color-light: #52d854;
-  --accent-color-dark: #00bf28;
-}
-.red, .deep-purple, .indigo, :root, .light-blue, .green {
+:root {
   --accent-color-gradient: linear-gradient(90deg, var(--accent-color-light), var(--accent-color), var(--accent-color-dark));
 }
 ::-webkit-scrollbar {
@@ -65,7 +43,7 @@
   user-select: none;
 }
 html, body {
-  font: 16px arial, sans-serif;
+  font: 16px 'Varela Round', sans-serif;
   color: var(--text-color);
   background: var(--window-background);
   line-height: 1.5;
@@ -74,7 +52,6 @@ html, body {
   margin: 0;
 }
 main {
-  max-width: 720px;
   padding: 16px;
   margin: 0 auto;
 }
@@ -141,12 +118,12 @@ select, input, textarea {
   color: var(--text-color);
   border-radius: var(--border-radius-1x);
 }
-.card:not(.modal-content) .card:not(.modal-content), .card:not(.modal-content) select, .card:not(.modal-content) input, .card:not(.modal-content) textarea, .achievement {
+.card .card, .card select, .card input, .card textarea {
   background: var(--elevation-overlay-2);
 }
 textarea {
   height: 96px;
-  font-family: arial, sans-serif;
+  font-family: 'Varela Round', sans-serif;
   overflow-y: auto;
   resize: none;
 }
@@ -243,23 +220,12 @@ pre {
 }
 
 /* general elements */
-.secondary-title {
-  margin: 0;
-  font-size: 32px;
-}
-.accent-text {
-  color: var(--accent-color);
-}
 .card {
   display: block;
   border: 1px solid var(--hover-color);
   border-radius: var(--border-radius-2x);
   text-decoration: inherit;
   color: inherit;
-}
-.big-c-icon {
-  font-size: 32px;
-  margin: 0 32px 0 16px;
 }
 .card > h2:first-child {
   margin: 0 0 8px;
@@ -269,49 +235,6 @@ pre {
 }
 .card > p:last-child {
   margin-bottom: 2px;
-}
-h2 > .c-icon {
-  color: var(--text-color-secondary);
-  vertical-align: text-top;
-}
-.progress-text {
-  margin: 0 8px;
-  line-height: 16px;
-  text-align: center;
-}
-.progress-control {
-  width: 32px;
-  height: 32px;
-  line-height: 32px;
-  flex: none;
-  margin: -8px 0;
-  padding: 0;
-  border-radius: var(--border-radius-2x);
-  font-weight: bold;
-}
-.progress-control.left {
-  margin-right: 16px;
-}
-.progress-control.right {
-  margin-left: 16px;
-}
-.fab {
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-  height: 56px;
-  width: 56px;
-  line-height: 56px;
-  text-align: center;
-  border-radius: 50%;
-  background: var(--accent-color-gradient);
-  color: var(--text-color-dark);
-  box-shadow: var(--card-shadow);
-  cursor: pointer;
-  animation: fadeIn .5s;
-}
-.fab.raised {
-  bottom: 72px;
 }
 .link-list {
   padding: 0;
@@ -332,30 +255,6 @@ h2 > .c-icon {
   color: var(--accent-color);
   vertical-align: top;
 }
-.big {
-  font-size: 32px;
-}
-.material-icons-round.accent {
-  color: var(--accent-color);
-}
-.material-icons-round.img {
-  position: relative;
-  margin-right: 16px;
-  padding: 16px;
-  z-index: 1;
-}
-.material-icons-round.img::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: .16;
-  z-index: 0;
-  background: var(--accent-color);
-  border-radius: var(--border-radius-1x);
-}
 .button-bar button {
   background: transparent;
   color: var(--accent-color);
@@ -368,13 +267,6 @@ h2 > .c-icon {
 }
 .button-bar button:active {
   background: var(--pressed-color);
-}
-.question button {
-  border: 2px solid transparent;
-  border-radius: var(--border-radius-1x);
-}
-.question button.selected {
-  border: 2px solid var(--accent-color);
 }
 
 /* alignment */
@@ -426,22 +318,6 @@ h2 > .c-icon {
 }
 .text-center {
   text-align: center;
-}
-.ignore-page-padding {
-  margin: -16px;
-}
-.vertical {
-  margin: 48px -32px;
-  width: 128px;
-  transform: rotate(-90deg);
-}
-.vertical-container {
-  justify-content: space-around;
-  padding: 72px 64px;
-  margin: -64px;
-}
-.reverse {
-  transform: rotate(180deg);
 }
 .relative {
   position: relative;
@@ -527,6 +403,35 @@ h2 > .c-icon {
   padding-left: 24px;
   padding-right: 24px;
 }
+.screen-center-container {
+  position: relative;
+  min-width: 100vw;
+  min-height: 100vh;
+}
+.screen-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  text-align: center;
+}
+
+/* main menu */
+.main-menu-container {
+  background: var(--background-dim), url('../images/menu.jpg') no-repeat center/cover;
+}
+.main-menu {
+  max-width: 480px;
+  animation: fadeIn 2s;
+}
+.main-menu > h1 {
+  margin: 0 0 32px;
+  font: 64px 'Leckerli One', cursive;
+}
+.main-menu > p {
+  margin: 32px 0;
+}
 
 /* animation */
 .zoom-in-animation {
@@ -554,7 +459,7 @@ h2 > .c-icon {
     transform: translateY(+16px);
   }
 }
-@keyframes fadeInModal {
+@keyframes fadeInSecondaryModal {
   0%{
     opacity: 0;
     transform: translate(-50%, calc(16px - 50%));

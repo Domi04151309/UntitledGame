@@ -44,8 +44,8 @@ layout: null
   ],
   "start_url": "{{ site.baseurl }}/#/",
   "background_color": "#121212",
-  "display": "standalone",
-  "orientation": "portrait",
+  "display": "fullscreen",
+  "orientation": "landscape",
   "scope": "{{ site.baseurl }}/",
   "theme_color": "#1e1e1e"
 }

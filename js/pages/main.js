@@ -1,8 +1,18 @@
 export default {
   name: 'main',
   template:
-  `<main>
-    <h2>Not Yet Created</h2>
-    <p>Unfortunately the site you requested does not exist yet!</p>
-  </main>`
+  `<div class="screen-center-container main-menu-container">
+    <main class="screen-center main-menu">
+      <h1>Untitled Game</h1>
+      <p>A simple roleplay game with a twist!</p>
+      <button type="button" class="w-100" v-on:click="alert('Not Yet Implemented')">Play</button>
+      <button type="button" class="w-100" v-on:click="toggleFullScreen()">Toggle Fullscreen</button>
+    </main>
+  </div>`,
+  methods: {
+    toggleFullScreen() {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen()
+      else if (document.exitFullscreen) document.exitFullscreen()
+    }
+  }
 }
