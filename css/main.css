@@ -1,13 +1,12 @@
 :root {
   --accent-color: #2979FF;
-  --accent-color-alpha: #2979FF20;
   --accent-color-light: #448AFF;
   --accent-color-dark: #2962FF;
-  --window-background: #fff;
-  --elevation-overlay: #fff;
-  --elevation-overlay-2: #fff;
-  --text-color: rgba(0, 0, 0, .87);
-  --text-color-secondary: rgba(0, 0, 0, .6);
+  --window-background: #121212;
+  --elevation-overlay: #1e1e1e;
+  --elevation-overlay-2: #222222;
+  --text-color: rgba(255, 255, 255, .87);
+  --text-color-secondary: rgba(255, 255, 255, .6);
   --text-color-dark: #fff;
   --hover-color: rgba(128, 128, 128, .125);
   --pressed-color: rgba(128, 128, 128, .25);
@@ -16,7 +15,6 @@
   --border-radius-4x: 32px;
   --card-shadow: 0 0 12px rgba(0, 0, 0, .2);
   --background-dim: linear-gradient(rgba(0, 0, 0, .25), rgba(0, 0, 0, .25)) no-repeat center;
-  --background-dim-2: linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)) no-repeat center;
 }
 .red {
   --accent-color: #ff1744;
@@ -46,33 +44,17 @@
 .red, .deep-purple, .indigo, :root, .light-blue, .green {
   --accent-color-gradient: linear-gradient(90deg, var(--accent-color-light), var(--accent-color), var(--accent-color-dark));
 }
-:root.dark-theme {
-  --window-background: #121212;
-  --elevation-overlay: #1e1e1e;
-  --elevation-overlay-2: #222222;
-  --text-color: rgba(255, 255, 255, .87);
-  --text-color-secondary: rgba(255, 255, 255, .6);
-}
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #F1F1F1;
-}
-::-webkit-scrollbar-thumb {
-  background: #C1C1C1;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #A8A8A8;
-}
-.dark-theme ::-webkit-scrollbar-track {
   background: #1e1e1e;
 }
-.dark-theme ::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background: #2c2c2c;
 }
-.dark-theme ::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
   background: #373737;
 }
 
@@ -91,56 +73,13 @@ html, body {
   padding: 0;
   margin: 0;
 }
-header, footer {
-  position: fixed;
-  height: 56px;
-  width: 100%;
-  overflow: hidden;
-  text-align: center;
-  z-index: 50;
-  transition-duration: .25s;
-}
-header {
-  top: 0;
-}
-footer {
-  display: flex;
-  bottom: 0;
-  justify-content: space-evenly;
-  color: var(--text-color-secondary);
-}
-.header-shadow, footer {
-  box-shadow: 0 0 12px rgba(0,0,0,.25);
-  background: var(--elevation-overlay);
-}
-.header-shadow .nav-icon.transparent {
-  color: var(--text-color-secondary)
-}
-header h1 {
-  height: 100%;
-  display: inline-block;
-  font-size: 1.17em;
-  color: var(--text-color-secondary);
-  line-height: 56px;
-  margin: 0;
-}
 main {
   max-width: 720px;
   padding: 16px;
   margin: 0 auto;
 }
-.with.app-bar {
-  margin-top: 56px;
-}
-.with.tab-bar {
-  margin-bottom: 56px;
-}
 h1, h2, h3, h4, h5, h6 {
   font-weight: normal;
-}
-.h3 {
-  font-size: 1.17em;
-  margin: 1em 0;
 }
 img {
   max-width: 100%;
@@ -438,91 +377,6 @@ h2 > .c-icon {
   border: 2px solid var(--accent-color);
 }
 
-/* image cards */
-.img-card {
-  position: relative;
-  background: #000;
-  border: 0;
-}
-.img-card > * {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-}
-.img-card > .overlay {
-  background: rgba(0, 0, 0, .25);
-}
-.img-card > h2 {
-  height: auto;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-color-dark);
-  text-shadow: 0 0 6px rgba(0,0,0,.5);
-  text-align: center;
-}
-
-/* UX */
-.category:empty {
-  margin-bottom: 32px;
-}
-.category:empty:before {
-  display: block;
-  color: var(--text-color-secondary);
-  text-align: center;
-  content: 'No results for this category'
-}
-.search:empty:after {
-  display: block;
-  color: var(--text-color-secondary);
-  text-align: center;
-  grid-column: 1/3;
-  content: 'No results.'
-}
-.diary:empty:before {
-  display: block;
-  color: var(--text-color-secondary);
-  text-align: center;
-  content: 'There are currently no entries in your diary. Add entries by consuming food or doing exercises.'
-}
-.tracking:empty:before {
-  display: block;
-  padding: 16px;
-  color: var(--text-color-secondary);
-  text-align: center;
-  content: 'There are currently no entries. Press the button on the bottom right to add entries.'
-}
-.disabled {
-  opacity: .38;
-}
-
-/* calendar */
-#calendar button {
-  padding: 12px;
-  background: none;
-  box-shadow: none;
-  color: var(--text-color-secondary);
-}
-#calendar button:hover {
-  background: var(--hover-color);
-}
-#calendar button:active {
-  background: var(--pressed-color);
-}
-#calendar .controls {
-  float: right;
-}
-#calendar .controls button {
-  margin: 0;
-  padding: 8px 12px;
-}
-#calendar .today {
-  background: var(--accent-color-alpha);
-  color: var(--accent-color);
-}
-
 /* alignment */
 .grid-1-2, .grid-1-3, .grid-2, .grid-3, .grid-7 {
   display: grid;
@@ -707,235 +561,6 @@ h2 > .c-icon {
   }
 }
 
-/* navigation */
-.tab {
-  display: block;
-  padding: 4px;
-  border-radius: var(--border-radius-1x);
-  color: var(--text-color-secondary);
-  text-decoration: none;
-  cursor: pointer;
-}
-.tab:hover, .link-list > *:hover {
-  background: var(--hover-color);
-}
-.tab:hover, .link-list > *:active {
-  background: var(--pressed-color);
-}
-.tab > .material-icons-round, .nav-icon {
-  display: block;
-  height: 48px;
-  width: 48px;
-  font-size: 24px;
-  padding: 12px;
-}
-.nav-icon {
-  float: left;
-  margin: 4px;
-  color: var(--text-color-secondary);
-}
-.nav-icon.transparent {
-  color: var(--text-color-dark)
-}
-.with-nav-icon {
-  padding-right: 56px;
-}
-footer .router-link-active {
-  color: var(--accent-color);
-}
-
-/* modal */
-.modal-background, .modal-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  z-index: 100;
-}
-.modal-background {
-  background: rgba(0, 0, 0, .5);
-  z-index: 100;
-}
-.modal-content {
-  position: absolute;
-  width: 90%;
-  max-width: 480px;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  background: var(--window-background);
-  padding: 16px;
-  z-index: 150;
-  animation: fadeInModal .5s;
-}
-.modal-content > h2 {
-  margin: 0 0 16px;
-}
-.modal-content > .button-bar {
-  margin-top: 16px;
-  text-align: right;
-}
-.modal-content > .button-bar > button {
-  margin: -8px 0;
-  padding: 8px;
-}
-
-/* achievement */
-.achievement {
-  position: fixed;
-  top: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  width: fit-content;
-  padding: 16px 32px;
-  border-radius: var(--border-radius-4x);
-  overflow: hidden;
-  z-index: 100;
-}
-.achievement.normal {
-  animation: fadeInModal .5s;
-}
-.achievement.reverse {
-  animation: fadeInModal .5s;
-  animation-direction: reverse;
-  animation-fill-mode: forwards;
-}
-.achievement > .material-icons-round {
-  margin-right: 8px;
-}
-
-/* setup */
-.setup-image {
-  position: absolute;
-  clip-path: ellipse(125vw 50vh at 100% 0);
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50vh;
-  background: #000 center/cover no-repeat;
-  z-index: -1;
-}
-.setup-image.welcome {
-  background-image: url('../images/setup/welcome.jpg');
-}
-.setup-image.info {
-  background-image: url('../images/setup/info.jpg');
-}
-.setup-image.well-being {
-  background-image: url('../images/well-being/1.jpg');
-}
-.setup-image.nutrition {
-  background-image: url('../images/food/breakfast.jpg');
-}
-.setup-image.fitness {
-  background-image: url('../images/exercises/hiking.jpg');
-}
-.setup-image.finish {
-  background-image: url('../images/setup/finish.jpg');
-}
-.setup-text {
-  margin: auto;
-  margin-top: 50vh;
-  margin-bottom: 32px;
-  text-align: center;
-}
-.setup-input {
-  width: 75%;
-  text-align: center;
-  border-radius: var(--border-radius-4x);
-}
-select.setup-input {
-  -webkit-appearance: none;
-  text-align-last: center;
-}
-
-/* exercises */
-.card.exercise {
-  height: calc(33vh - 48px);
-  max-height: 256px;
-}
-div.large-app-bar {
-  background: #000;
-}
-h2.large-app-bar {
-  position: relative;
-  margin: 0;
-  padding: 128px 16px;
-  text-shadow: 0 0 6px rgba(0,0,0,.5);
-  color: var(--text-color-dark);
-  text-align: center;
-  z-index: 0;
-}
-main.large-app-bar {
-  position: relative;
-  margin-top: -32px;
-  border-radius: var(--border-radius-4x) var(--border-radius-4x) 0 0;
-  background: var(--window-background);
-  z-index: 1;
-}
-
-/* food */
-.card.food {
-  height: 96px;
-}
-
-/* account */
-#profile-icon {
-  font-size: 72px;
-  align-self: center;
-}
-.item-caption {
-  display: block;
-  margin-bottom: -4px;
-}
-
-/* lite */
-.lite {
-  color: var(--text-color-dark);
-  text-align: center;
-  border: 0;
-  padding: 64px 24px;
-  font-weight: bold;
-  line-height: 2;
-  letter-spacing: .5px;
-}
-.lite.small {
-  padding: 24px;
-}
-
-/* images */
-div.large-app-bar.exercises > h2 {
-  background: var(--background-dim), url('../images/exercises/hiking.jpg') no-repeat center/cover;
-}
-div.large-app-bar.healthy > h2 {
-  background: var(--background-dim), url('../images/food/healthy.jpg') no-repeat center/cover;
-}
-div.large-app-bar.casual > h2 {
-  background: var(--background-dim), url('../images/food/casual.jpg') no-repeat center/cover;
-}
-.lite.general {
-  background: var(--background-dim-2), url('../images/setup/welcome.jpg') no-repeat center/cover;
-}
-.lite.well-being {
-  background: var(--background-dim-2), url('../images/well-being/1.jpg') no-repeat center/cover;
-}
-.lite.exercises {
-  background: var(--background-dim-2), url('../images/exercises/hiking.jpg') no-repeat center/cover;
-}
-.lite.nutrition {
-  background: var(--background-dim-2), url('../images/food/lunch.jpg') no-repeat center/cover;
-}
-
-/* charts */
-.frappe-chart .x.axis .line-vertical {
-  display: none;
-}
-.frappe-chart .y.axis .line-horizontal {
-  display: none;
-}
-
 /* loading screen */
 #loading_screen {
   position: fixed;
@@ -982,20 +607,9 @@ div.large-app-bar.casual > h2 {
 .balls div:nth-of-type(3) {
   animation-delay: -0.2s;
 }
-main.wavy > *:not(.fab) {
-  animation: wave 2s ease-in-out alternate infinite;
-  animation-delay: -1s;
-}
 @keyframes wave {
   from {transform: translateY(-100%);}
   to {transform: translateY(100%);}
-}
-
-/* radial progress bar */
-circle {
-  transition: stroke-dashoffset 0.35s;
-  transform: rotate(-90deg);
-  transform-origin: 50% 50%;
 }
 
 /* media queries */
@@ -1006,30 +620,5 @@ circle {
   }
   .grid-1-3 {
     grid-template-columns: repeat(3, 3fr);
-  }
-
-  /* exercises */
-  div.large-app-bar {
-    background: var(--window-background);
-  }
-  h2.large-app-bar {
-    border-radius: var(--border-radius-2x);
-    margin: 16px auto 0;
-    max-width: 684px;
-  }
-  main.large-app-bar {
-    margin-top: 0px;
-  }
-  .nav-icon.transparent {
-    color: var(--text-color-secondary);
-  }
-}
-
-/* support queries */
-@supports (-webkit-background-clip: text) {
-  .link-list .material-icons-round, .material-icons-round.accent, footer .router-link-active > span {
-    background: var(--accent-color-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
   }
 }
