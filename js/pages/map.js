@@ -1,4 +1,5 @@
 import Menu from '../components/menu.js'
+import Stats from '../components/stats.js'
 
 const FRAMERATE = 60
 const DISTANCE_PER_FRAME = 20 / FRAMERATE
@@ -22,14 +23,16 @@ export default {
   `<div>
     <Menu></Menu>
     <main class="full-height">
+      <Stats></Stats>
       <p class="card tutorial">
-        Use WASD to move.
+        Use WASD to move
       </p>
       <canvas ref="canvas"></canvas>
     </main>
   </div>`,
   components: {
-    Menu
+    Menu,
+    Stats
   },
   methods: {
     onKeyDown(event) {

@@ -152,63 +152,13 @@ textarea {
   overflow-y: auto;
   resize: none;
 }
-input[type=range] {
-  -webkit-appearance: none;
-  box-shadow: none;
-  background: none;
-}
-input[type=range]::-webkit-slider-runnable-track {
-  width: 100%;
-  height: 4px;
-  background: var(--pressed-color);
-  border-radius: var(--border-radius-1x);
-  cursor: pointer;
-}
-input[type=range]::-moz-range-track {
-  width: 100%;
-  height: 4px;
-  background: var(--pressed-color);
-  border-radius: var(--border-radius-1x);
-  cursor: pointer;
-}
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  height: 16px;
-  width: 16px;
-  background: var(--accent-color);
-  border-radius: var(--border-radius-1x);
-  margin-top: -6px;
-}
-input[type=range]::-moz-range-thumb {
-  height: 16px;
-  width: 16px;
-  background: var(--accent-color);
-  border-radius: var(--border-radius-1x);
-  border: 0;
-  margin-top: -6px;
-}
-input[type=radio] {
-  display: none;
-}
-input[type=radio] + label {
-  display: inline-block;
-  padding: 4px 16px;
-  background: var(--elevation-overlay);
-  border-radius: var(--border-radius-2x);
-  border: 1px solid var(--hover-color);
-  box-shadow: var(--card-shadow);
-}
-input[type=radio]:checked + label {
-  background: var(--hover-color);
-  color: var(--text-color);
-}
 progress, .progress {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 12px;
+  height: 16px;
   align-self: center;
-  background: var(--pressed-color);
+  background: var(--elevation-overlay);
   border-radius: var(--border-radius-1x);
   border: 0;
   overflow: hidden;
@@ -231,7 +181,7 @@ progress::-moz-progress-bar {
 }
 .progress > div {
   height: 100%;
-  margin-left: -12px;
+  margin-left: -16px;
   background: var(--accent-color-gradient);
   border-radius: 0 var(--border-radius-1x) var(--border-radius-1x) 0;
   transition: width .5s;
@@ -343,9 +293,6 @@ pre {
 }
 .absolute {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -60%);
 }
 .w-100 {
   width: 100%;
@@ -487,6 +434,28 @@ canvas {
 }
 .full-height {
   height: 100vh;
+}
+.stats {
+  display: inline-block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin: 16px;
+  width: 240px;
+  max-width: 50vw;
+  z-index: 500;
+}
+.stats .relative {
+  padding-bottom: 4px;
+  font-size: 12px;
+  line-height: 16px;
+}
+.stats .relative > .absolute {
+  width: 100%;
+  text-align: center;
+}
+.stats .grid-2 {
+  gap: 4px;
 }
 .tutorial {
   display: inline-block;
