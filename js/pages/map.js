@@ -3,6 +3,7 @@
 import Menu from '../components/menu.js'
 import Inventory from '../components/inventory.js'
 import Stats from '../components/stats.js'
+import Tutorial from '../components/tutorial.js'
 import POverlay from '../components/p-overlay.js'
 
 import MapStore from '../helpers/map-store.js'
@@ -37,10 +38,8 @@ export default {
     <Inventory></Inventory>
     <main class="full-height">
       <Stats :character="character"></Stats>
+      <Tutorial></Tutorial>
       <POverlay :data="{ i: counter, fps: this.drawCompanion.fps, scale: this.scale, position: this.character.position, movement: this.character.movement }"></POverlay>
-      <p class="card tutorial">
-        Use WASD to move
-      </p>
       <canvas ref="canvas"></canvas>
     </main>
   </div>`,
@@ -48,6 +47,7 @@ export default {
     Menu,
     Inventory,
     Stats,
+    Tutorial,
     POverlay
   },
   methods: {

@@ -14,7 +14,7 @@ export default {
   `<div>
     <Menu></Menu>
     <main class="full-height" :style="'background: var(--background-dim), url(' + dialog.background + ') no-repeat center/cover;'" v-on:click="next()">
-      <p class="card tutorial">
+      <p v-if="!localStorage.getItem('tutorial_complete')" class="card tutorial">
         Click or press enter to continue. Press backspace to go back.
       </p>
       <img class="dialog-character left" :src="dialog.character[0].texture">
