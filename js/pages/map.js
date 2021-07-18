@@ -1,6 +1,7 @@
 /*eslint no-fallthrough: ["error", { "commentPattern": "break[\\s\\w]*omitted" }]*/
 
 import Menu from '../components/menu.js'
+import Inventory from '../components/inventory.js'
 import Stats from '../components/stats.js'
 import POverlay from '../components/p-overlay.js'
 
@@ -33,6 +34,7 @@ export default {
   template:
   `<div>
     <Menu></Menu>
+    <Inventory></Inventory>
     <main class="full-height">
       <Stats :character="character"></Stats>
       <POverlay :data="{ i: counter, fps: this.drawCompanion.fps, scale: this.scale, position: this.character.position, movement: this.character.movement }"></POverlay>
@@ -44,6 +46,7 @@ export default {
   </div>`,
   components: {
     Menu,
+    Inventory,
     Stats,
     POverlay
   },
