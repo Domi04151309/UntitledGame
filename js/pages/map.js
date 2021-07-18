@@ -23,12 +23,12 @@ export default {
       entities: [],
       scale: 5,
       counter: COUNTER_MAX,
-      randomOffset: 0,
       drawCompanion: {
         running: true,
         drawing: false,
         lastCalled: 0,
-        fps: 0
+        fps: 0,
+        frameCounter: 0
       }
     }
   },
@@ -100,9 +100,13 @@ export default {
       }
 
       //FPS
-      const delta = (time - this.drawCompanion.lastCalled) / 1000
-      this.drawCompanion.lastCalled = time
-      this.drawCompanion.fps = Math.floor(1 / delta)
+      if ((time - this.drawCompanion.lastCalled) / 1000 > 1) {
+        this.drawCompanion.lastCalled = time
+        this.drawCompanion.fps = this.drawCompanion.frameCounter
+        this.drawCompanion.frameCounter = 0
+      } else {
+        this.drawCompanion.frameCounter++
+      }
 
       //Character specific logic
       this.character.move(this.mapStore.offsceen.ctx)
@@ -110,9 +114,9 @@ export default {
       //Character animation
       switch (this.counter) {
         case COUNTER_MAX: //once every two seconds
-          this.randomOffset = Math.round(Math.random())
-          this.character.updateRandomSprite()
-          this.entities[0].updateRandomSprite()
+          this.character.updateIdleSprite()
+          this.entities[0].updateIdleSprite()
+          this.entities[1].updateIdleSprite()
           //break omitted
         case COUNTER_MAX / 8:
         case COUNTER_MAX / 4:
@@ -129,35 +133,36 @@ export default {
       //Map drawing
       this.ctx.imageSmoothingEnabled = false
       this.ctx.fillStyle = '#1C50F1'
+      this.ctx.filter = 'brightness(100%)';
       this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
-
       this.ctx.drawImage(
         this.mapStore.default,
         -this.character.position[0] * this.scale + window.innerWidth / 2,
-        -this.character.position[1] * this.scale + window.innerHeight / 2,
+        -this.character.position[1] * this.scale + (window.innerHeight + this.scale * ENTITY_SIZE) / 2,
         this.scale * this.mapStore.default.width,
         this.scale * this.mapStore.default.height
       )
+      this.ctx.filter = 'none';
       this.ctx.drawImage(
         this.mapStore.structures,
         -this.character.position[0] * this.scale + window.innerWidth / 2,
-        -this.character.position[1] * this.scale + window.innerHeight / 2,
+        -this.character.position[1] * this.scale + (window.innerHeight + this.scale * ENTITY_SIZE) / 2,
         this.scale * this.mapStore.default.width,
         this.scale * this.mapStore.default.height
       )
       this.entities.forEach(entity => {
         this.ctx.drawImage(
           entity.sprites.selected,
-          (-this.character.position[0] + entity.position[0] - ENTITY_SIZE / 2) * this.scale + window.innerWidth / 2,
-          (-this.character.position[1] + entity.position[1] - ENTITY_SIZE) * this.scale + window.innerHeight / 2,
+          (-this.character.position[0] + entity.position[0] - ENTITY_SIZE / 2) * this.scale + window.innerWidth / 2 + entity.getOffset(this.scale),
+          (-this.character.position[1] + entity.position[1] - ENTITY_SIZE) * this.scale + (window.innerHeight + this.scale * ENTITY_SIZE) / 2,
           this.scale * ENTITY_SIZE,
           this.scale * ENTITY_SIZE
         )
       })
       this.ctx.drawImage(
         this.character.sprites.selected,
-        (window.innerWidth - ENTITY_SIZE * this.scale) / 2 + (this.character.movement[0] == 0 &&  this.character.movement[1] == 0 ? this.randomOffset * this.scale : 0),
-        window.innerHeight / 2 - ENTITY_SIZE * this.scale,
+        (window.innerWidth - ENTITY_SIZE * this.scale) / 2 + this.character.getOffset(this.scale),
+        (window.innerHeight - ENTITY_SIZE * this.scale) / 2,
         this.scale * ENTITY_SIZE,
         this.scale * ENTITY_SIZE
       )
@@ -189,6 +194,10 @@ export default {
     }, [3100, 3450]))
     this.entities[0].speed = CharacterCompanion.WALKING_SPEED_SLOW
     this.entities[0].addToWalkPath([2935, 3460], [2935, 3760], [3180, 3745], [3170, 3620], [3060, 3550], [3100, 3450])
+
+    this.entities.push(new Character('Pollux', {
+      idle: ['pollux/0.png', 'pollux/1.png']
+    }, [3170, 3300]))
 
     document.addEventListener('keydown', this.onKeyDown)
     document.addEventListener('keyup', this.onKeyUp)

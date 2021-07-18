@@ -28,6 +28,7 @@ class Character {
     this.position = new Float32Array(position)
     this.movement = new Float32Array([0, 0])
     this.speed = CharacterCompanion.WALKING_SPEED_FAST
+    this.randomOffset = 0
     this.routeIndex = 0
     this.waypoints = []
   }
@@ -46,16 +47,20 @@ class Character {
     else this.sprites.i = 0
     this.sprites.selected = this.sprites[category][this.sprites.i]
   }
-  updateRandomSprite(category = 'idle') {
+  updateIdleSprite(category = 'idle') {
     if (this.sprites[category].length == 0) return
     if (this.sprites[category].length > 1)   this.sprites.selected = this.sprites[category][Math.floor(Math.random() * this.sprites[category].length)]
     else this.sprites.selected = this.sprites[category][0]
+    this.randomOffset = Math.round(Math.random())
   }
   chooseMatchingSprite() {
     if (this.movement[1] == -1) this.updateSprite('up')
     else if (this.movement[1] == 1) this.updateSprite('down')
     else if (this.movement[0] == -1) this.updateSprite('left')
     else if (this.movement[0] == 1) this.updateSprite('right')
+  }
+  getOffset(scale) {
+    return this.movement[0] == 0 && this.movement[1] == 0 ? this.randomOffset * scale : 0
   }
   move(ctx) {
     const vector = new Vector(...this.movement)
