@@ -5,7 +5,6 @@ import Character from '../data/character.js'
 import ImageHelper from '../helpers/image.js'
 
 const FRAMERATE = 60
-const DISTANCE_PER_FRAME = 5 * 8 / FRAMERATE
 const FRAME_DURATION = 1000 / FRAMERATE
 const ENTITY_SIZE = 16
 
@@ -18,9 +17,6 @@ export default {
       map: null,
       character: null,
       scale: 5,
-      x: -1360,
-      y: -870,
-      movement: [0, 0],
       frameCounter: 0,
       randomOffset: 0,
       drawing: false
@@ -43,15 +39,15 @@ export default {
   },
   methods: {
     onKeyDown(event) {
-      if (event.keyCode == 87) this.movement[1] = 1
-      else if (event.keyCode == 65) this.movement[0] = 1
-      else if (event.keyCode == 83) this.movement[1] = -1
-      else if (event.keyCode == 68) this.movement[0] = -1
-      else if (event.keyCode == 80) console.log({ x: Math.round(this.x), y: Math.round(this.y), scale: Math.round(this.scale) })
+      if (event.keyCode == 87) this.character.movement[1] = 1
+      else if (event.keyCode == 65) this.character.movement[0] = 1
+      else if (event.keyCode == 83) this.character.movement[1] = -1
+      else if (event.keyCode == 68) this.character.movement[0] = -1
+      else if (event.keyCode == 80) console.log({ position: this.character.position, scale: Math.round(this.scale) })
     },
     onKeyUp(event) {
-      if (event.keyCode == 87 || event.keyCode == 83) this.movement[1] = 0
-      else if (event.keyCode == 65 || event.keyCode == 68) this.movement[0] = 0
+      if (event.keyCode == 87 || event.keyCode == 83) this.character.movement[1] = 0
+      else if (event.keyCode == 65 || event.keyCode == 68) this.character.movement[0] = 0
     },
     onWheel(event) {
       if (event.deltaY > 0 && this.scale > 1) this.scale -= 1
@@ -65,7 +61,7 @@ export default {
       if (this.drawing) return
 
       this.drawing = true
-      if (this.ctx == null) this.ctx = this.$refs.canvas.getContext('2d')
+      if (this.ctx == null) this.ctx = this.$refs.canvas.getContext('2d', { alpha: false })
       if (this.map == null) this.map = await ImageHelper.loadImage('./images/map.png')
       if (!this.character.sprites.loaded) await this.character.loadSprites()
 
@@ -75,8 +71,8 @@ export default {
       this.ctx.imageSmoothingEnabled = false
       this.ctx.drawImage(
         this.map,
-        this.x * this.scale + window.innerWidth / 2,
-        this.y * this.scale + window.innerHeight / 2,
+        this.character.position[0] * this.scale + window.innerWidth / 2,
+        this.character.position[1] * this.scale + window.innerHeight / 2,
         this.scale * this.map.width,
         this.scale * this.map.height
       )
@@ -112,12 +108,12 @@ export default {
     window.addEventListener('resize', this.windowResize)
 
     this.drawingThread = setInterval(() => {
-      this.x += this.movement[0] * DISTANCE_PER_FRAME
-      this.y += this.movement[1] * DISTANCE_PER_FRAME
+      this.character.position[0] += this.character.movement[0]
+      this.character.position[1] += this.character.movement[1]
 
-      if (this.movement[1] == 1) this.character.updateSprite('up')
-      else if (this.movement[0] == -1) this.character.updateSprite('right')
-      else if (this.movement[0] == 1) this.character.updateSprite('left')
+      if (this.character.movement[1] == 1) this.character.updateSprite('up')
+      else if (this.character.movement[0] == -1) this.character.updateSprite('right')
+      else if (this.character.movement[0] == 1) this.character.updateSprite('left')
 
       this.drawMap()
     }, FRAME_DURATION)

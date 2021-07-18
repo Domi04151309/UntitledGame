@@ -15,7 +15,10 @@ export default class Character {
 
     this.health = 100
     this.energy = 75
-    this.fear = 0
+    this.terror = 0
+
+    this.position = new Int32Array([-1360, -870])
+    this.movement = new Int8Array([0, 0]) 
   }
   async loadSprites() {
     for (const category in this.spriteInfo) {

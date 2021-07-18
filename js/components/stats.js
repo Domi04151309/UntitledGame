@@ -16,8 +16,8 @@ export default {
         <progress :value="character.energy" max="100"></progress>
       </div>
       <div class="relative">
-        <span class="absolute">{{ character.fear }} fear</span>
-        <progress class="deep-purple" :value="character.fear" max="100"></progress>
+        <span class="absolute">{{ character.terror }} terror</span>
+        <progress class="deep-purple" :value="character.terror" max="100"></progress>
       </div>
     </div>
   </div>`
