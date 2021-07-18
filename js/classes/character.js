@@ -15,7 +15,6 @@ class Character extends Entity {
     this.energy = 75
     this.terror = 0
 
-    this.movement = new Float32Array([0, 0])
     this.speed = CharacterCompanion.WALKING_SPEED_FAST
     this.routeIndex = 0
     this.waypoints = []

@@ -7,11 +7,12 @@ import Tutorial from '../components/tutorial.js'
 import POverlay from '../components/p-overlay.js'
 
 import MapStore from '../helpers/map-store.js'
+import Counter from '../classes/counter.js'
 import Entity from '../classes/entity.js'
 import { CharacterCompanion, Character } from '../classes/character.js'
 
 const ENTITY_SIZE = 16
-const COUNTER_MAX = 120
+const ESTIMATED_FRAMERATE = 60
 
 export default {
   name: 'map',
@@ -19,11 +20,14 @@ export default {
     return {
       ctx: null,
       mapStore: null,
-      character: null,
       entitiesLoaded: false,
       entities: [],
       scale: 5,
-      counter: COUNTER_MAX,
+      counters: {
+        oneFourth: null,
+        two: null,
+        five: null
+      },
       drawCompanion: {
         running: true,
         drawing: false,
@@ -38,9 +42,9 @@ export default {
     <Menu></Menu>
     <Inventory></Inventory>
     <main class="full-height">
-      <Stats :character="character"></Stats>
+      <Stats :character="this.entities[0]"></Stats>
       <Tutorial></Tutorial>
-      <POverlay :data="{ i: counter, fps: this.drawCompanion.fps, scale: this.scale, position: this.character.position, movement: this.character.movement }"></POverlay>
+      <POverlay :data="{ i: counters.oneFourth.count, fps: this.drawCompanion.fps, scale: this.scale, position: this.entities[0].position, movement: this.entities[0].movement }"></POverlay>
       <canvas ref="canvas"></canvas>
     </main>
   </div>`,
@@ -53,28 +57,28 @@ export default {
   },
   methods: {
     onKeyDown(event) {
-      if (event.keyCode == 87 && this.character.movement[1] != -1) {
-        this.character.movement[1] = -1
-        this.counter = COUNTER_MAX
-      } else if (event.keyCode == 65 && this.character.movement[0] != -1) {
-        this.character.movement[0] = -1
-        this.counter = COUNTER_MAX
-      } else if (event.keyCode == 83 && this.character.movement[1] != 1) {
-        this.character.movement[1] = 1
-        this.counter = COUNTER_MAX
-      } else if (event.keyCode == 68 && this.character.movement[0] != 1) {
-        this.character.movement[0] = 1
-        this.counter = COUNTER_MAX
+      if (event.keyCode == 87 && this.entities[0].movement[1] != -1) {
+        this.entities[0].movement[1] = -1
+        this.counters.oneFourth.reset()
+      } else if (event.keyCode == 65 && this.entities[0].movement[0] != -1) {
+        this.entities[0].movement[0] = -1
+        this.counters.oneFourth.reset()
+      } else if (event.keyCode == 83 && this.entities[0].movement[1] != 1) {
+        this.entities[0].movement[1] = 1
+        this.counters.oneFourth.reset()
+      } else if (event.keyCode == 68 && this.entities[0].movement[0] != 1) {
+        this.entities[0].movement[0] = 1
+        this.counters.oneFourth.reset()
       } else if (event.keyCode == 189 && this.scale > 2) this.scale -= 1
         else if (event.keyCode == 187 && this.scale < 20) this.scale += 1
     },
     onKeyUp(event) {
       if (event.keyCode == 87 || event.keyCode == 83) {
-        this.character.movement[1] = 0
-        this.counter = COUNTER_MAX
+        this.entities[0].movement[1] = 0
+        this.counters.two.reset()
       } else if (event.keyCode == 65 || event.keyCode == 68) {
-        this.character.movement[0] = 0
-        this.counter = COUNTER_MAX
+        this.entities[0].movement[0] = 0
+        this.counters.two.reset()
       }
     },
     onWheel(event) {
@@ -93,7 +97,6 @@ export default {
 
       //Init
       if (!this.mapStore.loaded) await this.mapStore.load()
-      if (!this.character.sprites.loaded) await this.character.loadSprites()
       if (!this.entitiesLoaded) {
         for (const entity of this.entities) {
           await entity.loadSprites()
@@ -111,66 +114,54 @@ export default {
       }
 
       //Character specific logic
-      this.character.move(this.mapStore.offsceen.ctx)
-      this.entities[0].followPath(this.mapStore.offsceen.ctx)
+      this.entities[0].move(this.mapStore.offsceen.ctx)
+      this.entities[1].followPath(this.mapStore.offsceen.ctx)
       //Character animation
-      switch (this.counter) {
-        case COUNTER_MAX: //once every two seconds
-          this.character.updateIdleSprite()
-          this.entities.forEach(entity => entity.updateIdleSprite())
-          //break omitted
-        case COUNTER_MAX / 8:
-        case COUNTER_MAX / 4:
-        case 3 * COUNTER_MAX / 8:
-        case COUNTER_MAX / 2:
-        case 5 * COUNTER_MAX / 8:
-        case 3 * COUNTER_MAX / 4:
-        case 7 * COUNTER_MAX / 8: //four times a second
-          this.character.chooseMatchingSprite()
-          this.entities[0].chooseMatchingSprite()
-          break
+      if (this.counters.oneFourth.increment() == 1) {
+        this.entities.forEach(entity => {
+          if (entity instanceof Character) entity.chooseMatchingSprite()
+        })
+      }
+      if (this.counters.two.increment() == 1) {
+        this.entities.forEach(entity => entity.updateIdleSprite())
+      }
+      if (this.counters.five.increment() == 1) {
+        this.entities.forEach(entity => {
+          if (entity instanceof Character && entity.energy < 100) entity.energy += 1
+        })
       }
 
       //Map drawing
+      const x = -this.entities[0].position[0] * this.scale + window.innerWidth / 2
+      const y = -this.entities[0].position[1] * this.scale + (window.innerHeight + this.scale * ENTITY_SIZE) / 2
       this.ctx.imageSmoothingEnabled = false
       this.ctx.fillStyle = '#1C50F1'
       this.ctx.filter = 'brightness(90%)';
       this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
       this.ctx.drawImage(
         this.mapStore.default,
-        -this.character.position[0] * this.scale + window.innerWidth / 2,
-        -this.character.position[1] * this.scale + (window.innerHeight + this.scale * ENTITY_SIZE) / 2,
+        x,
+        y,
         this.scale * this.mapStore.default.width,
         this.scale * this.mapStore.default.height
       )
       this.ctx.filter = 'none';
       this.ctx.drawImage(
         this.mapStore.structures,
-        -this.character.position[0] * this.scale + window.innerWidth / 2,
-        -this.character.position[1] * this.scale + (window.innerHeight + this.scale * ENTITY_SIZE) / 2,
+        x,
+        y,
         this.scale * this.mapStore.default.width,
         this.scale * this.mapStore.default.height
       )
       this.entities.forEach(entity => {
         this.ctx.drawImage(
           entity.sprites.selected,
-          (-this.character.position[0] + entity.position[0] - ENTITY_SIZE / 2) * this.scale + window.innerWidth / 2 + entity.getOffset(this.scale),
-          (-this.character.position[1] + entity.position[1] - ENTITY_SIZE) * this.scale + (window.innerHeight + this.scale * ENTITY_SIZE) / 2,
+          x + (entity.position[0] - ENTITY_SIZE / 2) * this.scale + entity.getOffset(this.scale),
+          y + (entity.position[1] - ENTITY_SIZE) * this.scale,
           this.scale * ENTITY_SIZE,
           this.scale * ENTITY_SIZE
         )
       })
-      this.ctx.drawImage(
-        this.character.sprites.selected,
-        (window.innerWidth - ENTITY_SIZE * this.scale) / 2 + this.character.getOffset(this.scale),
-        (window.innerHeight - ENTITY_SIZE * this.scale) / 2,
-        this.scale * ENTITY_SIZE,
-        this.scale * ENTITY_SIZE
-      )
-
-      //Counter for random events
-      this.counter++
-      if (this.counter > COUNTER_MAX) this.counter = 0
 
       this.drawCompanion.drawing = false
     }
@@ -178,13 +169,13 @@ export default {
   created() {
     this.mapStore = MapStore
 
-    this.character = new Character('Steve', {
+    this.entities.push(new Character('Steve', {
       idle: ['steve/0.png', 'steve/1.png'],
       left: ['steve/left0.png', 'steve/left1.png'],
       right: ['steve/right0.png', 'steve/right1.png'],
       up: ['steve/up0.png', 'steve/up1.png'],
       down: ['steve/down0.png', 'steve/down1.png']
-    }, [3190, 3370])
+    }, [3190, 3370]))
 
     this.entities.push(new Character('Bruno', {
       idle: ['bruno/0.png', 'bruno/1.png'],
@@ -193,8 +184,8 @@ export default {
       up: ['bruno/up0.png', 'bruno/up1.png'],
       down: ['bruno/down0.png', 'bruno/down1.png']
     }, [3100, 3450]))
-    this.entities[0].speed = CharacterCompanion.WALKING_SPEED_SLOW
-    this.entities[0].addToWalkPath([2935, 3460], [2935, 3760], [3180, 3745], [3170, 3620], [3060, 3550], [3100, 3450])
+    this.entities[1].speed = CharacterCompanion.WALKING_SPEED_SLOW
+    this.entities[1].addToWalkPath([2935, 3460], [2935, 3760], [3180, 3745], [3170, 3620], [3060, 3550], [3100, 3450])
 
     this.entities.push(new Character('Pollux', {
       idle: ['pollux/0.png', 'pollux/1.png']
@@ -203,6 +194,10 @@ export default {
     this.entities.push(new Entity({
       idle: ['items/sword1.png', 'items/sword2.png']
     }, [3110, 3450]))
+
+    this.counters.oneFourth = new Counter(ESTIMATED_FRAMERATE / 4)
+    this.counters.two = new Counter(ESTIMATED_FRAMERATE * 2)
+    this.counters.five = new Counter(ESTIMATED_FRAMERATE * 5)
 
     document.addEventListener('keydown', this.onKeyDown)
     document.addEventListener('keyup', this.onKeyUp)

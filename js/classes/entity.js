@@ -14,6 +14,7 @@ export default class Entity {
     }
 
     this.position = new Float32Array(position)
+    this.movement = new Float32Array([0, 0])
     this.randomOffset = 0
   }
   async loadSprites() {
@@ -31,10 +32,10 @@ export default class Entity {
     else this.sprites.i = 0
     this.sprites.selected = this.sprites[category][this.sprites.i]
   }
-  updateIdleSprite(category = 'idle') {
-    if (this.sprites[category].length == 0) return
-    if (this.sprites[category].length > 1)   this.sprites.selected = this.sprites[category][Math.floor(Math.random() * this.sprites[category].length)]
-    else this.sprites.selected = this.sprites[category][0]
+  updateIdleSprite() {
+    if (this.sprites['idle'].length == 0 || this.movement[0] != 0 || this.movement[1] != 0) return
+    if (this.sprites['idle'].length > 1)   this.sprites.selected = this.sprites['idle'][Math.floor(Math.random() * this.sprites['idle'].length)]
+    else this.sprites.selected = this.sprites['idle'][0]
     this.randomOffset = Math.round(Math.random())
   }
   getOffset(scale) {
