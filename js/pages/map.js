@@ -15,10 +15,15 @@ export default {
   data() {
     return {
       ctx: null,
+      offsceen: {
+        canvas: null,
+        ctx: null
+      },
       map: {
         loaded: false,
         default: null,
-        structures: null
+        structures: null,
+        collision: null
       },
       character: null,
       entitiesLoaded: false,
@@ -90,36 +95,24 @@ export default {
       if (this.drawCompanion.drawing) return
       this.drawCompanion.drawing = true
 
-      //FPS
-      const delta = (time - this.drawCompanion.lastCalled) / 1000
-      this.drawCompanion.lastCalled = time
-      this.drawCompanion.fps = Math.floor(1 / delta)
-
-      //Character specific logic
-      this.character.position[0] += this.character.movement[0]
-      this.character.position[1] += this.character.movement[1]
-      //Character animation
-      switch (this.counter) {
-        case COUNTER_MAX: //once every two seconds
-          this.randomOffset = Math.round(Math.random())
-          this.character.updateRandomSprite()
-          //break omitted
-        case COUNTER_MAX / 2:
-        case COUNTER_MAX / 4:
-        case 3 * COUNTER_MAX / 4: //twice a second
-          if (this.character.movement[1] == 1) this.character.updateSprite('up')
-          else if (this.character.movement[1] == -1) this.character.updateSprite('down')
-          else if (this.character.movement[0] == 1) this.character.updateSprite('left')
-          else if (this.character.movement[0] == -1) this.character.updateSprite('right')
-          break
-      }
-
       //Init
       if (!this.map.loaded) {
         this.map.default = await ImageHelper.loadImage('./images/map.png')
         this.map.structures = await ImageHelper.loadImage('./images/map_structures.png')
+        this.map.collision = await ImageHelper.loadImage('./images/map_collision.png')
+
+        this.offsceen.canvas = new OffscreenCanvas(this.map.default.width, this.map.default.height)
+        this.offsceen.ctx = this.offsceen.canvas.getContext('2d', { alpha: false })
+        this.offsceen.ctx.imageSmoothingEnabled = false
+        this.offsceen.ctx.drawImage(
+          this.map.collision,
+          0,
+          0,
+          this.map.default.width,
+          this.map.default.height
+        )
+
         this.map.loaded = true
-        console.log(this.map)
       }
       if (!this.character.sprites.loaded) await this.character.loadSprites()
       if (!this.entitiesLoaded) {
@@ -129,11 +122,35 @@ export default {
         this.entitiesLoaded = true
       }
 
+      //FPS
+      const delta = (time - this.drawCompanion.lastCalled) / 1000
+      this.drawCompanion.lastCalled = time
+      this.drawCompanion.fps = Math.floor(1 / delta)
+
+      //Character specific logic
+      this.character.move(this.offsceen.ctx)
+      //Character animation
+      switch (this.counter) {
+        case COUNTER_MAX: //once every two seconds
+          this.randomOffset = Math.round(Math.random())
+          this.character.updateRandomSprite()
+          //break omitted
+        case COUNTER_MAX / 8:
+        case COUNTER_MAX / 4:
+        case 3 * COUNTER_MAX / 8:
+        case COUNTER_MAX / 2:
+        case 5 * COUNTER_MAX / 8:
+        case 3 * COUNTER_MAX / 4:
+        case 7 * COUNTER_MAX / 8: //four times a second
+          this.character.chooseMatchingSprite()
+          break
+      }
+
       //Map drawing
+      this.ctx.imageSmoothingEnabled = false
       this.ctx.fillStyle = '#1C50F1'
       this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
 
-      this.ctx.imageSmoothingEnabled = false
       this.ctx.drawImage(
         this.map.default,
         this.character.position[0] * this.scale + window.innerWidth / 2,
