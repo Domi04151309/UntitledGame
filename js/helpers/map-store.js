@@ -10,9 +10,9 @@ export default {
     ctx: null
   },
   async load() {
-    this.default = await ImageHelper.loadImage('./images/map.png')
-    this.structures = await ImageHelper.loadImage('./images/map_structures.png')
-    this.collision = await ImageHelper.loadImage('./images/map_collision.png')
+    this.default = await ImageHelper.loadImage('map.png')
+    this.structures = await ImageHelper.loadImage('map_structures.png')
+    this.collision = await ImageHelper.loadImage('map_collision.png')
 
     this.offsceen.canvas = new OffscreenCanvas(this.default.width, this.default.height)
     this.offsceen.ctx = this.offsceen.canvas.getContext('2d', { alpha: false })

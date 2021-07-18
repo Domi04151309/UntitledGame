@@ -167,15 +167,15 @@ export default {
     this.mapStore = MapStore
 
     this.character = new Character('Steve', {
-      idle: ['./images/steve/0.png', './images/steve/1.png'],
-      left: ['./images/steve/left0.png', './images/steve/left1.png'],
-      right: ['./images/steve/right0.png', './images/steve/right1.png'],
-      up: ['./images/steve/up0.png', './images/steve/up1.png'],
-      down: ['./images/steve/down0.png', './images/steve/down1.png']
+      idle: ['steve/0.png', 'steve/1.png'],
+      left: ['steve/left0.png', 'steve/left1.png'],
+      right: ['steve/right0.png', 'steve/right1.png'],
+      up: ['steve/up0.png', 'steve/up1.png'],
+      down: ['steve/down0.png', 'steve/down1.png']
     })
 
     this.entities.push(new Character('Bruno', {
-      idle: ['./images/bruno/0.png']
+      idle: ['bruno/0.png']
     }, [-3100, -3450]))
 
     document.addEventListener('keydown', this.onKeyDown)
