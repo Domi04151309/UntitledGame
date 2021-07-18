@@ -12,7 +12,11 @@ export default {
   data() {
     return {
       ctx: null,
-      map: null,
+      map: {
+        loaded: false,
+        default: null,
+        structures: null
+      },
       character: null,
       entitiesLoaded: false,
       entities: [],
@@ -83,7 +87,12 @@ export default {
       else if (this.character.movement[0] == 1) this.character.updateSprite('left')
 
       //Init
-      if (this.map == null) this.map = await ImageHelper.loadImage('./images/map.png')
+      if (!this.map.loaded) {
+        this.map.default = await ImageHelper.loadImage('./images/map.png')
+        this.map.structures = await ImageHelper.loadImage('./images/map_structures.png')
+        this.map.loaded = true
+        console.log(this.map)
+      }
       if (!this.character.sprites.loaded) await this.character.loadSprites()
       if (!this.entitiesLoaded) {
         for (const entity of this.entities) {
@@ -98,11 +107,18 @@ export default {
 
       this.ctx.imageSmoothingEnabled = false
       this.ctx.drawImage(
-        this.map,
+        this.map.default,
         this.character.position[0] * this.scale + window.innerWidth / 2,
         this.character.position[1] * this.scale + window.innerHeight / 2,
-        this.scale * this.map.width,
-        this.scale * this.map.height
+        this.scale * this.map.default.width,
+        this.scale * this.map.default.height
+      )
+      this.ctx.drawImage(
+        this.map.structures,
+        this.character.position[0] * this.scale + window.innerWidth / 2,
+        this.character.position[1] * this.scale + window.innerHeight / 2,
+        this.scale * this.map.default.width,
+        this.scale * this.map.default.height
       )
       this.entities.forEach(entity => {
         this.ctx.drawImage(
@@ -115,7 +131,7 @@ export default {
       })
       this.ctx.drawImage(
         this.character.sprites.selected,
-        (window.innerWidth - ENTITY_SIZE * this.scale) / 2 + this.randomOffset,
+        (window.innerWidth - ENTITY_SIZE * this.scale) / 2 + this.randomOffset * this.scale,
         window.innerHeight / 2 - ENTITY_SIZE * this.scale,
         this.scale * ENTITY_SIZE,
         this.scale * ENTITY_SIZE
@@ -125,7 +141,7 @@ export default {
       this.frameCounter++
       if (this.frameCounter > this.drawCompanion.fps * 2) {
         this.frameCounter = 0
-        this.randomOffset = Math.round(Math.random() * 4)
+        this.randomOffset = Math.round(Math.random())
         this.character.updateSprite()
       }
 
