@@ -5,15 +5,12 @@ import POverlay from '../components/p-overlay.js'
 import Character from '../data/character.js'
 import ImageHelper from '../helpers/image.js'
 
-const FRAMERATE = 60
-const FRAME_DURATION = 1000 / FRAMERATE
 const ENTITY_SIZE = 16
 
 export default {
   name: 'map',
   data() {
     return {
-      drawingThread: null,
       ctx: null,
       map: null,
       character: null,
@@ -22,7 +19,12 @@ export default {
       scale: 5,
       frameCounter: 0,
       randomOffset: 0,
-      drawing: false
+      drawCompanion: {
+        running: true,
+        drawing: false,
+        lastCalled: 0,
+        fps: 0
+      }
     }
   },
   template:
@@ -30,7 +32,7 @@ export default {
     <Menu></Menu>
     <main class="full-height">
       <Stats :character="character"></Stats>
-      <POverlay :data="{ i: frameCounter, scale: this.scale, position: this.character.position, movement: this.character.movement }"></POverlay>
+      <POverlay :data="{ i: frameCounter, fps: this.drawCompanion.fps, scale: this.scale, position: this.character.position, movement: this.character.movement }"></POverlay>
       <p class="card tutorial">
         Use WASD to move
       </p>
@@ -61,11 +63,26 @@ export default {
       this.$refs.canvas.width = window.innerWidth
       this.$refs.canvas.height = window.innerHeight
     },
-    async drawMap() {
-      if (this.drawing) return
+    async draw(time = 0) {
+      if (this.drawCompanion.running) requestAnimationFrame(this.draw)
 
-      this.drawing = true
-      if (this.ctx == null) this.ctx = this.$refs.canvas.getContext('2d', { alpha: false })
+      if (this.drawCompanion.drawing) return
+      this.drawCompanion.drawing = true
+
+      //FPS
+      const delta = (time - this.drawCompanion.lastCalled) / 1000
+      this.drawCompanion.lastCalled = time
+      this.drawCompanion.fps = Math.floor(1 / delta)
+
+      //Character specific logic
+      this.character.position[0] += this.character.movement[0]
+      this.character.position[1] += this.character.movement[1]
+
+      if (this.character.movement[1] == 1) this.character.updateSprite('up')
+      else if (this.character.movement[0] == -1) this.character.updateSprite('right')
+      else if (this.character.movement[0] == 1) this.character.updateSprite('left')
+
+      //Init
       if (this.map == null) this.map = await ImageHelper.loadImage('./images/map.png')
       if (!this.character.sprites.loaded) await this.character.loadSprites()
       if (!this.entitiesLoaded) {
@@ -75,7 +92,7 @@ export default {
         this.entitiesLoaded = true
       }
 
-
+      //Map drawing
       this.ctx.fillStyle = '#1C50F1'
       this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
 
@@ -96,7 +113,6 @@ export default {
           this.scale * ENTITY_SIZE
         )
       })
-
       this.ctx.drawImage(
         this.character.sprites.selected,
         (window.innerWidth - ENTITY_SIZE * this.scale) / 2 + this.randomOffset,
@@ -105,14 +121,15 @@ export default {
         this.scale * ENTITY_SIZE
       )
 
+      //Character specific logic
       this.frameCounter++
-      if (this.frameCounter > FRAMERATE * 2) {
+      if (this.frameCounter > this.drawCompanion.fps * 2) {
         this.frameCounter = 0
         this.randomOffset = Math.round(Math.random() * 4)
         this.character.updateSprite()
       }
 
-      this.drawing = false
+      this.drawCompanion.drawing = false
     }
   },
   created() {
@@ -132,18 +149,10 @@ export default {
     document.addEventListener('wheel', this.onWheel)
     window.addEventListener('resize', this.windowResize)
 
-    this.drawingThread = setInterval(() => {
-      this.character.position[0] += this.character.movement[0]
-      this.character.position[1] += this.character.movement[1]
-
-      if (this.character.movement[1] == 1) this.character.updateSprite('up')
-      else if (this.character.movement[0] == -1) this.character.updateSprite('right')
-      else if (this.character.movement[0] == 1) this.character.updateSprite('left')
-
-      this.drawMap()
-    }, FRAME_DURATION)
+    this.draw()
   },
   mounted() {
+    this.ctx = this.$refs.canvas.getContext('2d', { alpha: false })
     this.windowResize()
   },
   beforeDestroy() {
@@ -152,6 +161,6 @@ export default {
     document.removeEventListener('wheel', this.onWheel)
     window.removeEventListener('resize', this.windowResize)
 
-    clearInterval(this.drawingThread)
+    this.drawCompanion.running = false
   }
 }
