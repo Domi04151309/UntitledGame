@@ -112,6 +112,7 @@ export default {
         case COUNTER_MAX: //once every two seconds
           this.randomOffset = Math.round(Math.random())
           this.character.updateRandomSprite()
+          this.entities[0].updateRandomSprite()
           //break omitted
         case COUNTER_MAX / 8:
         case COUNTER_MAX / 4:
@@ -121,6 +122,7 @@ export default {
         case 3 * COUNTER_MAX / 4:
         case 7 * COUNTER_MAX / 8: //four times a second
           this.character.chooseMatchingSprite()
+          this.entities[0].chooseMatchingSprite()
           break
       }
 
@@ -179,7 +181,11 @@ export default {
     })
 
     this.entities.push(new Character('Bruno', {
-      idle: ['bruno/0.png']
+      idle: ['bruno/0.png', 'bruno/1.png'],
+      left: ['bruno/down0.png', 'bruno/down1.png'],
+      right: ['bruno/down0.png', 'bruno/down1.png'],
+      up: ['bruno/up0.png', 'bruno/up1.png'],
+      down: ['bruno/down0.png', 'bruno/down1.png']
     }, [3100, 3450]))
     this.entities[0].speed = CharacterCompanion.WALKING_SPEED_SLOW
     this.entities[0].addToWalkPath([2935, 3460], [2935, 3760], [3180, 3745], [3170, 3620], [3060, 3550], [3100, 3450])
