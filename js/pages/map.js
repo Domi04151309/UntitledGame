@@ -1,3 +1,5 @@
+/*eslint no-fallthrough: ["error", { "commentPattern": "break[\\s\\w]*omitted" }]*/
+
 import Menu from '../components/menu.js'
 import Stats from '../components/stats.js'
 import POverlay from '../components/p-overlay.js'
@@ -6,6 +8,7 @@ import Character from '../data/character.js'
 import ImageHelper from '../helpers/image.js'
 
 const ENTITY_SIZE = 16
+const COUNTER_MAX = 120
 
 export default {
   name: 'map',
@@ -21,7 +24,7 @@ export default {
       entitiesLoaded: false,
       entities: [],
       scale: 5,
-      frameCounter: 0,
+      counter: COUNTER_MAX,
       randomOffset: 0,
       drawCompanion: {
         running: true,
@@ -36,7 +39,7 @@ export default {
     <Menu></Menu>
     <main class="full-height">
       <Stats :character="character"></Stats>
-      <POverlay :data="{ i: frameCounter, fps: this.drawCompanion.fps, scale: this.scale, position: this.character.position, movement: this.character.movement }"></POverlay>
+      <POverlay :data="{ i: counter, fps: this.drawCompanion.fps, scale: this.scale, position: this.character.position, movement: this.character.movement }"></POverlay>
       <p class="card tutorial">
         Use WASD to move
       </p>
@@ -50,14 +53,28 @@ export default {
   },
   methods: {
     onKeyDown(event) {
-      if (event.keyCode == 87) this.character.movement[1] = 1
-      else if (event.keyCode == 65) this.character.movement[0] = 1
-      else if (event.keyCode == 83) this.character.movement[1] = -1
-      else if (event.keyCode == 68) this.character.movement[0] = -1
+      if (event.keyCode == 87 && this.character.movement[1] != 1) {
+        this.character.movement[1] = 1
+        this.counter = COUNTER_MAX
+      } else if (event.keyCode == 65 && this.character.movement[0] != 1) {
+        this.character.movement[0] = 1
+        this.counter = COUNTER_MAX
+      } else if (event.keyCode == 83 && this.character.movement[1] != -1) {
+        this.character.movement[1] = -1
+        this.counter = COUNTER_MAX
+      } else if (event.keyCode == 68 && this.character.movement[0] != -1) {
+        this.character.movement[0] = -1
+        this.counter = COUNTER_MAX
+      }
     },
     onKeyUp(event) {
-      if (event.keyCode == 87 || event.keyCode == 83) this.character.movement[1] = 0
-      else if (event.keyCode == 65 || event.keyCode == 68) this.character.movement[0] = 0
+      if (event.keyCode == 87 || event.keyCode == 83) {
+        this.character.movement[1] = 0
+        this.counter = COUNTER_MAX
+      } else if (event.keyCode == 65 || event.keyCode == 68) {
+        this.character.movement[0] = 0
+        this.counter = COUNTER_MAX
+      }
     },
     onWheel(event) {
       if (event.deltaY > 0 && this.scale > 1) this.scale -= 1
@@ -81,10 +98,21 @@ export default {
       //Character specific logic
       this.character.position[0] += this.character.movement[0]
       this.character.position[1] += this.character.movement[1]
-
-      if (this.character.movement[1] == 1) this.character.updateSprite('up')
-      else if (this.character.movement[0] == -1) this.character.updateSprite('right')
-      else if (this.character.movement[0] == 1) this.character.updateSprite('left')
+      //Character animation
+      switch (this.counter) {
+        case COUNTER_MAX: //once every two seconds
+          this.randomOffset = Math.round(Math.random())
+          this.character.updateRandomSprite()
+          //break omitted
+        case COUNTER_MAX / 2:
+        case COUNTER_MAX / 4:
+        case 3 * COUNTER_MAX / 4: //twice a second
+          if (this.character.movement[1] == 1) this.character.updateSprite('up')
+          else if (this.character.movement[1] == -1) this.character.updateSprite('down')
+          else if (this.character.movement[0] == 1) this.character.updateSprite('left')
+          else if (this.character.movement[0] == -1) this.character.updateSprite('right')
+          break
+      }
 
       //Init
       if (!this.map.loaded) {
@@ -131,34 +159,31 @@ export default {
       })
       this.ctx.drawImage(
         this.character.sprites.selected,
-        (window.innerWidth - ENTITY_SIZE * this.scale) / 2 + this.randomOffset * this.scale,
+        (window.innerWidth - ENTITY_SIZE * this.scale) / 2 + (this.character.movement[0] == 0 &&  this.character.movement[1] == 0 ? this.randomOffset * this.scale : 0),
         window.innerHeight / 2 - ENTITY_SIZE * this.scale,
         this.scale * ENTITY_SIZE,
         this.scale * ENTITY_SIZE
       )
 
-      //Character specific logic
-      this.frameCounter++
-      if (this.frameCounter > this.drawCompanion.fps * 2) {
-        this.frameCounter = 0
-        this.randomOffset = Math.round(Math.random())
-        this.character.updateSprite()
-      }
+      //Counter for random events
+      this.counter++
+      if (this.counter > COUNTER_MAX) this.counter = 0
 
       this.drawCompanion.drawing = false
     }
   },
   created() {
     this.character = new Character('Steve', {
-      default: ['./images/steve/0.png', './images/steve/1.png'],
-      left: ['./images/steve/left.png'],
-      right: ['./images/steve/right.png'],
-      up: ['./images/steve/up.png']
+      idle: ['./images/steve/0.png', './images/steve/1.png'],
+      left: ['./images/steve/left0.png', './images/steve/left1.png'],
+      right: ['./images/steve/right0.png', './images/steve/right1.png'],
+      up: ['./images/steve/up0.png', './images/steve/up1.png'],
+      down: ['./images/steve/down0.png', './images/steve/down1.png']
     })
 
     this.entities.push(new Character('Bruno', {
-      default: ['./images/bruno/0.png']
-    }))
+      idle: ['./images/bruno/0.png']
+    }, [-3100, -3450]))
 
     document.addEventListener('keydown', this.onKeyDown)
     document.addEventListener('keyup', this.onKeyUp)
