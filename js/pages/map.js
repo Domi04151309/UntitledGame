@@ -7,7 +7,7 @@ import Tutorial from '../components/tutorial.js'
 import POverlay from '../components/p-overlay.js'
 
 import MapStore from '../helpers/map-store.js'
-import Character from '../classes/character.js'
+import { CharacterCompanion, Character } from '../classes/character.js'
 
 const ENTITY_SIZE = 16
 const COUNTER_MAX = 120
@@ -52,17 +52,17 @@ export default {
   },
   methods: {
     onKeyDown(event) {
-      if (event.keyCode == 87 && this.character.movement[1] != 1) {
-        this.character.movement[1] = 1
-        this.counter = COUNTER_MAX
-      } else if (event.keyCode == 65 && this.character.movement[0] != 1) {
-        this.character.movement[0] = 1
-        this.counter = COUNTER_MAX
-      } else if (event.keyCode == 83 && this.character.movement[1] != -1) {
+      if (event.keyCode == 87 && this.character.movement[1] != -1) {
         this.character.movement[1] = -1
         this.counter = COUNTER_MAX
-      } else if (event.keyCode == 68 && this.character.movement[0] != -1) {
+      } else if (event.keyCode == 65 && this.character.movement[0] != -1) {
         this.character.movement[0] = -1
+        this.counter = COUNTER_MAX
+      } else if (event.keyCode == 83 && this.character.movement[1] != 1) {
+        this.character.movement[1] = 1
+        this.counter = COUNTER_MAX
+      } else if (event.keyCode == 68 && this.character.movement[0] != 1) {
+        this.character.movement[0] = 1
         this.counter = COUNTER_MAX
       }
     },
@@ -76,7 +76,7 @@ export default {
       }
     },
     onWheel(event) {
-      if (event.deltaY > 0 && this.scale > 1) this.scale -= 1
+      if (event.deltaY > 0 && this.scale > 2) this.scale -= 1
       else if (event.deltaY < 0 && this.scale < 20) this.scale += 1
     },
     windowResize() {
@@ -106,6 +106,7 @@ export default {
 
       //Character specific logic
       this.character.move(this.mapStore.offsceen.ctx)
+      this.entities[0].followPath(this.mapStore.offsceen.ctx)
       //Character animation
       switch (this.counter) {
         case COUNTER_MAX: //once every two seconds
@@ -130,23 +131,23 @@ export default {
 
       this.ctx.drawImage(
         this.mapStore.default,
-        this.character.position[0] * this.scale + window.innerWidth / 2,
-        this.character.position[1] * this.scale + window.innerHeight / 2,
+        -this.character.position[0] * this.scale + window.innerWidth / 2,
+        -this.character.position[1] * this.scale + window.innerHeight / 2,
         this.scale * this.mapStore.default.width,
         this.scale * this.mapStore.default.height
       )
       this.ctx.drawImage(
         this.mapStore.structures,
-        this.character.position[0] * this.scale + window.innerWidth / 2,
-        this.character.position[1] * this.scale + window.innerHeight / 2,
+        -this.character.position[0] * this.scale + window.innerWidth / 2,
+        -this.character.position[1] * this.scale + window.innerHeight / 2,
         this.scale * this.mapStore.default.width,
         this.scale * this.mapStore.default.height
       )
       this.entities.forEach(entity => {
         this.ctx.drawImage(
           entity.sprites.selected,
-          (this.character.position[0] - entity.position[0] - ENTITY_SIZE / 2) * this.scale + window.innerWidth / 2,
-          (this.character.position[1] - entity.position[1] - ENTITY_SIZE) * this.scale + window.innerHeight / 2,
+          (-this.character.position[0] + entity.position[0] - ENTITY_SIZE / 2) * this.scale + window.innerWidth / 2,
+          (-this.character.position[1] + entity.position[1] - ENTITY_SIZE) * this.scale + window.innerHeight / 2,
           this.scale * ENTITY_SIZE,
           this.scale * ENTITY_SIZE
         )
@@ -179,7 +180,9 @@ export default {
 
     this.entities.push(new Character('Bruno', {
       idle: ['bruno/0.png']
-    }, [-3100, -3450]))
+    }, [3100, 3450]))
+    this.entities[0].speed = CharacterCompanion.WALKING_SPEED_SLOW
+    this.entities[0].addToWalkPath([2935, 3460], [2935, 3760], [3180, 3745], [3170, 3620], [3060, 3550], [3100, 3450])
 
     document.addEventListener('keydown', this.onKeyDown)
     document.addEventListener('keyup', this.onKeyUp)
