@@ -4,8 +4,8 @@ import Menu from '../components/menu.js'
 import Stats from '../components/stats.js'
 import POverlay from '../components/p-overlay.js'
 
-import Character from '../data/character.js'
-import ImageHelper from '../helpers/image.js'
+import MapStore from '../helpers/map-store.js'
+import Character from '../classes/character.js'
 
 const ENTITY_SIZE = 16
 const COUNTER_MAX = 120
@@ -15,16 +15,7 @@ export default {
   data() {
     return {
       ctx: null,
-      offsceen: {
-        canvas: null,
-        ctx: null
-      },
-      map: {
-        loaded: false,
-        default: null,
-        structures: null,
-        collision: null
-      },
+      mapStore: null,
       character: null,
       entitiesLoaded: false,
       entities: [],
@@ -96,24 +87,7 @@ export default {
       this.drawCompanion.drawing = true
 
       //Init
-      if (!this.map.loaded) {
-        this.map.default = await ImageHelper.loadImage('./images/map.png')
-        this.map.structures = await ImageHelper.loadImage('./images/map_structures.png')
-        this.map.collision = await ImageHelper.loadImage('./images/map_collision.png')
-
-        this.offsceen.canvas = new OffscreenCanvas(this.map.default.width, this.map.default.height)
-        this.offsceen.ctx = this.offsceen.canvas.getContext('2d', { alpha: false })
-        this.offsceen.ctx.imageSmoothingEnabled = false
-        this.offsceen.ctx.drawImage(
-          this.map.collision,
-          0,
-          0,
-          this.map.default.width,
-          this.map.default.height
-        )
-
-        this.map.loaded = true
-      }
+      if (!this.mapStore.loaded) await this.mapStore.load()
       if (!this.character.sprites.loaded) await this.character.loadSprites()
       if (!this.entitiesLoaded) {
         for (const entity of this.entities) {
@@ -128,7 +102,7 @@ export default {
       this.drawCompanion.fps = Math.floor(1 / delta)
 
       //Character specific logic
-      this.character.move(this.offsceen.ctx)
+      this.character.move(this.mapStore.offsceen.ctx)
       //Character animation
       switch (this.counter) {
         case COUNTER_MAX: //once every two seconds
@@ -152,18 +126,18 @@ export default {
       this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
 
       this.ctx.drawImage(
-        this.map.default,
+        this.mapStore.default,
         this.character.position[0] * this.scale + window.innerWidth / 2,
         this.character.position[1] * this.scale + window.innerHeight / 2,
-        this.scale * this.map.default.width,
-        this.scale * this.map.default.height
+        this.scale * this.mapStore.default.width,
+        this.scale * this.mapStore.default.height
       )
       this.ctx.drawImage(
-        this.map.structures,
+        this.mapStore.structures,
         this.character.position[0] * this.scale + window.innerWidth / 2,
         this.character.position[1] * this.scale + window.innerHeight / 2,
-        this.scale * this.map.default.width,
-        this.scale * this.map.default.height
+        this.scale * this.mapStore.default.width,
+        this.scale * this.mapStore.default.height
       )
       this.entities.forEach(entity => {
         this.ctx.drawImage(
@@ -190,6 +164,8 @@ export default {
     }
   },
   created() {
+    this.mapStore = MapStore
+
     this.character = new Character('Steve', {
       idle: ['./images/steve/0.png', './images/steve/1.png'],
       left: ['./images/steve/left0.png', './images/steve/left1.png'],
