@@ -1,57 +1,24 @@
-import ImageHelper from '../helpers/image.js'
-import Vector from '../classes/vector.js'
+import Entity from './entity.js'
+import Vector from './vector.js'
 
 const CharacterCompanion = {
   WALKING_SPEED_SLOW: .25,
   WALKING_SPEED_FAST: 1
 }
 
-class Character {
-  constructor(name, spriteInfo, position = [3550, 3165]) {
+class Character extends Entity {
+  constructor(name, spriteInfo, position) {
+    super(spriteInfo, position)
     this.name = name
-    this.spriteInfo = spriteInfo
-
-    this.sprites = {
-      i: 0,
-      loaded: false,
-      idle: [],
-      left: [],
-      right: [],
-      up: [],
-      down: []
-    }
 
     this.health = 100
     this.energy = 75
     this.terror = 0
 
-    this.position = new Float32Array(position)
     this.movement = new Float32Array([0, 0])
     this.speed = CharacterCompanion.WALKING_SPEED_FAST
-    this.randomOffset = 0
     this.routeIndex = 0
     this.waypoints = []
-  }
-  async loadSprites() {
-    for (const category in this.spriteInfo) {
-      for (const sprite of this.spriteInfo[category]) {
-        this.sprites[category].push(await ImageHelper.loadImage(sprite))
-      }
-    }
-    this.updateSprite()
-    this.sprites.loaded = true
-  }
-  updateSprite(category = 'idle') {
-    if (this.sprites[category].length == 0) return
-    if (this.sprites.i + 1 < this.sprites[category].length) this.sprites.i++
-    else this.sprites.i = 0
-    this.sprites.selected = this.sprites[category][this.sprites.i]
-  }
-  updateIdleSprite(category = 'idle') {
-    if (this.sprites[category].length == 0) return
-    if (this.sprites[category].length > 1)   this.sprites.selected = this.sprites[category][Math.floor(Math.random() * this.sprites[category].length)]
-    else this.sprites.selected = this.sprites[category][0]
-    this.randomOffset = Math.round(Math.random())
   }
   chooseMatchingSprite() {
     if (this.movement[1] == -1) this.updateSprite('up')

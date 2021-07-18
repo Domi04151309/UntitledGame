@@ -7,6 +7,7 @@ import Tutorial from '../components/tutorial.js'
 import POverlay from '../components/p-overlay.js'
 
 import MapStore from '../helpers/map-store.js'
+import Entity from '../classes/entity.js'
 import { CharacterCompanion, Character } from '../classes/character.js'
 
 const ENTITY_SIZE = 16
@@ -64,7 +65,8 @@ export default {
       } else if (event.keyCode == 68 && this.character.movement[0] != 1) {
         this.character.movement[0] = 1
         this.counter = COUNTER_MAX
-      }
+      } else if (event.keyCode == 189 && this.scale > 2) this.scale -= 1
+        else if (event.keyCode == 187 && this.scale < 20) this.scale += 1
     },
     onKeyUp(event) {
       if (event.keyCode == 87 || event.keyCode == 83) {
@@ -115,8 +117,7 @@ export default {
       switch (this.counter) {
         case COUNTER_MAX: //once every two seconds
           this.character.updateIdleSprite()
-          this.entities[0].updateIdleSprite()
-          this.entities[1].updateIdleSprite()
+          this.entities.forEach(entity => entity.updateIdleSprite())
           //break omitted
         case COUNTER_MAX / 8:
         case COUNTER_MAX / 4:
@@ -133,7 +134,7 @@ export default {
       //Map drawing
       this.ctx.imageSmoothingEnabled = false
       this.ctx.fillStyle = '#1C50F1'
-      this.ctx.filter = 'brightness(100%)';
+      this.ctx.filter = 'brightness(90%)';
       this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
       this.ctx.drawImage(
         this.mapStore.default,
@@ -183,7 +184,7 @@ export default {
       right: ['steve/right0.png', 'steve/right1.png'],
       up: ['steve/up0.png', 'steve/up1.png'],
       down: ['steve/down0.png', 'steve/down1.png']
-    })
+    }, [3190, 3370])
 
     this.entities.push(new Character('Bruno', {
       idle: ['bruno/0.png', 'bruno/1.png'],
@@ -198,6 +199,10 @@ export default {
     this.entities.push(new Character('Pollux', {
       idle: ['pollux/0.png', 'pollux/1.png']
     }, [3170, 3300]))
+
+    this.entities.push(new Entity({
+      idle: ['items/sword1.png', 'items/sword2.png']
+    }, [3110, 3450]))
 
     document.addEventListener('keydown', this.onKeyDown)
     document.addEventListener('keyup', this.onKeyUp)
