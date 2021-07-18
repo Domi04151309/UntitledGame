@@ -1,5 +1,6 @@
 import Menu from '../components/menu.js'
 import Stats from '../components/stats.js'
+import POverlay from '../components/p-overlay.js'
 
 import Character from '../data/character.js'
 import ImageHelper from '../helpers/image.js'
@@ -16,6 +17,8 @@ export default {
       ctx: null,
       map: null,
       character: null,
+      entitiesLoaded: false,
+      entities: [],
       scale: 5,
       frameCounter: 0,
       randomOffset: 0,
@@ -27,6 +30,7 @@ export default {
     <Menu></Menu>
     <main class="full-height">
       <Stats :character="character"></Stats>
+      <POverlay :data="{ i: frameCounter, scale: this.scale, position: this.character.position, movement: this.character.movement }"></POverlay>
       <p class="card tutorial">
         Use WASD to move
       </p>
@@ -35,7 +39,8 @@ export default {
   </div>`,
   components: {
     Menu,
-    Stats
+    Stats,
+    POverlay
   },
   methods: {
     onKeyDown(event) {
@@ -43,7 +48,6 @@ export default {
       else if (event.keyCode == 65) this.character.movement[0] = 1
       else if (event.keyCode == 83) this.character.movement[1] = -1
       else if (event.keyCode == 68) this.character.movement[0] = -1
-      else if (event.keyCode == 80) console.log({ position: this.character.position, scale: Math.round(this.scale) })
     },
     onKeyUp(event) {
       if (event.keyCode == 87 || event.keyCode == 83) this.character.movement[1] = 0
@@ -64,6 +68,13 @@ export default {
       if (this.ctx == null) this.ctx = this.$refs.canvas.getContext('2d', { alpha: false })
       if (this.map == null) this.map = await ImageHelper.loadImage('./images/map.png')
       if (!this.character.sprites.loaded) await this.character.loadSprites()
+      if (!this.entitiesLoaded) {
+        for (const entity of this.entities) {
+          await entity.loadSprites()
+        }
+        this.entitiesLoaded = true
+      }
+
 
       this.ctx.fillStyle = '#1C50F1'
       this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
@@ -76,6 +87,16 @@ export default {
         this.scale * this.map.width,
         this.scale * this.map.height
       )
+      this.entities.forEach(entity => {
+        this.ctx.drawImage(
+          entity.sprites.selected,
+          (this.character.position[0] - entity.position[0] - ENTITY_SIZE / 2) * this.scale + window.innerWidth / 2,
+          (this.character.position[1] - entity.position[1] - ENTITY_SIZE) * this.scale + window.innerHeight / 2,
+          this.scale * ENTITY_SIZE,
+          this.scale * ENTITY_SIZE
+        )
+      })
+
       this.ctx.drawImage(
         this.character.sprites.selected,
         (window.innerWidth - ENTITY_SIZE * this.scale) / 2 + this.randomOffset,
@@ -101,6 +122,10 @@ export default {
       right: ['./images/steve/right.png'],
       up: ['./images/steve/up.png']
     })
+
+    this.entities.push(new Character('Bruno', {
+      default: ['./images/bruno/0.png']
+    }))
 
     document.addEventListener('keydown', this.onKeyDown)
     document.addEventListener('keyup', this.onKeyUp)

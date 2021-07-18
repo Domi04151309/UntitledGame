@@ -409,6 +409,15 @@ pre {
   max-width: 480px;
 }
 
+/* p-overlay */
+.p-overlay {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  margin: 16px;
+  z-index: 500;
+}
+
 /* dialogs */
 .dialog-character {
   position: fixed;
