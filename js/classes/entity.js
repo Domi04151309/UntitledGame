@@ -1,4 +1,5 @@
 import ImageHelper from '../helpers/image.js'
+import DialogView from '../helpers/dialog-view.js'
 
 export default class Entity {
   constructor(name, spriteInfo, position) {
@@ -14,7 +15,7 @@ export default class Entity {
       down: []
     }
     this.position = new Float32Array(position)
-    this.interaction = () => console.log(this.name + ' did not move...')
+    this.interaction = () => DialogView.show('Narrator', this.name + ' did not move...')
   }
   async loadSprites() {
     for (const category in this.spriteInfo) {

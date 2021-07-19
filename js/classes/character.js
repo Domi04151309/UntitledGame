@@ -1,6 +1,8 @@
 import Entity from './entity.js'
 import Vector from './vector.js'
 
+import DialogView from '../helpers/dialog-view.js'
+
 const CharacterCompanion = {
   WALKING_SPEED_SLOW: .25,
   WALKING_SPEED_NORMAL: 1,
@@ -10,7 +12,7 @@ const CharacterCompanion = {
 class Character extends Entity {
   constructor(name, spriteInfo, position) {
     super(name, spriteInfo, position)
-    this.interaction = () => console.log(this.name + ' did not answer...')
+    this.interaction = () => DialogView.show('Narrator', this.name + ' did not answer...')
 
     this.health = 100
     this.energy = 75
