@@ -410,13 +410,6 @@ pre {
 }
 
 /* p-overlay */
-.p-overlay {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  margin: 16px;
-  z-index: 500;
-}
 
 /* dialogs */
 .dialog-character {
@@ -448,6 +441,16 @@ pre {
   font-size: 18px;
 }
 
+/* inventory */
+.inventory-container {
+  position: absolute;
+  background: var(--background-dim);
+  z-index: 750;
+}
+.inventory {
+  max-width: 480px;
+}
+
 /* game elements */
 canvas {
   position: absolute;
@@ -457,15 +460,19 @@ canvas {
 .full-height {
   height: 100vh;
 }
-.stats {
+.stats, .tutorial, .p-overlay, .tip {
   display: inline-block;
   position: fixed;
+  margin: 16px;
+  color: var(--text-color);
+  text-shadow: 0 0 16px #000;
+  z-index: 500;
+}
+.stats {
   top: 0;
   left: 0;
-  margin: 16px;
   width: 240px;
   max-width: 50vw;
-  z-index: 500;
 }
 .stats .relative {
   padding-bottom: 4px;
@@ -480,24 +487,23 @@ canvas {
   gap: 4px;
 }
 .tutorial {
-  display: inline-block;
-  position: fixed;
   top: 0;
   right: 0;
-  margin: 16px;
   padding: 8px 16px;
   font-size: 14px;
   color: var(--text-color-secondary);
   animation: fadeIn 2s;
+}
+.p-overlay {
+  bottom: 0;
+  left: 0;
+  margin: 16px;
   z-index: 500;
 }
-.inventory-container {
-  position: absolute;
-  background: var(--background-dim);
-  z-index: 750;
-}
-.inventory {
-  max-width: 480px;
+.tip {
+  bottom: 0;
+  right: 0;
+  font-size: 1.5em;
 }
 
 /* animation */

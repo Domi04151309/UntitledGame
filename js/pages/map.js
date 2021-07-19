@@ -8,6 +8,7 @@ import POverlay from '../components/p-overlay.js'
 
 import MapStore from '../helpers/map-store.js'
 import Counter from '../classes/counter.js'
+import Vector from '../classes/vector.js'
 import Entity from '../classes/entity.js'
 import { CharacterCompanion, Character } from '../classes/character.js'
 
@@ -23,6 +24,7 @@ export default {
       entitiesLoaded: false,
       entities: [],
       scale: 5,
+      tip: '',
       counters: {
         oneFourth: null,
         two: null,
@@ -45,6 +47,7 @@ export default {
       <Stats :character="this.entities[0]"></Stats>
       <Tutorial></Tutorial>
       <POverlay :data="{ i: counters.oneFourth.count, fps: this.drawCompanion.fps, scale: this.scale, position: this.entities[0].position, movement: this.entities[0].movement }"></POverlay>
+      <p class="tip">{{ tip }}</p>
       <canvas ref="canvas"></canvas>
     </main>
   </div>`,
@@ -73,9 +76,7 @@ export default {
         else if (event.keyCode == 32) this.entities[0].speed = CharacterCompanion.WALKING_SPEED_FAST
         else if (event.keyCode == 189 && this.scale > 2) this.scale -= 1
         else if (event.keyCode == 187 && this.scale < 20) this.scale += 1
-
-      event.preventDefault()
-      event.stopPropagation()
+        else if (event.keyCode == 81) alert('TODO: Not yet implemented')
     },
     onKeyUp(event) {
       if (event.keyCode == 87 || event.keyCode == 83) {
@@ -135,6 +136,11 @@ export default {
           if (entity instanceof Character && entity.energy < 100) entity.energy += 1
         })
       }
+      this.tip = ''
+      this.entities.forEach((entity, i) => {
+        if (i != 0 && new Vector(entity.position[0] - this.entities[0].position[0], entity.position[1] - this.entities[0].position[1]).getAbs() < 24)
+          this.tip = 'Press Q to interact with ' + entity.name
+      })
 
       //Map drawing
       const x = -this.entities[0].position[0] * this.scale + window.innerWidth / 2
@@ -206,7 +212,7 @@ export default {
       idle: ['pollux/0.png', 'pollux/1.png']
     }, [3170, 3300]))
 
-    this.entities.push(new Entity({
+    this.entities.push(new Entity('the sword', {
       idle: ['items/sword1.png', 'items/sword2.png']
     }, [3110, 3450]))
 

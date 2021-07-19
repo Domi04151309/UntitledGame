@@ -9,9 +9,7 @@ const CharacterCompanion = {
 
 class Character extends Entity {
   constructor(name, spriteInfo, position) {
-    super(spriteInfo, position)
-    this.name = name
-
+    super(name, spriteInfo, position)
     this.health = 100
     this.energy = 75
     this.terror = 0

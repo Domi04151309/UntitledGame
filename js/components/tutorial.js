@@ -6,8 +6,8 @@ export default {
       index: 0,
       text: [
         'Use WASD to move',
-        'Use E to open your inventory',
-        'Use ESC to pause the game'
+        'Press E to open your inventory',
+        'Press ESC to pause the game'
       ]
     }
   },

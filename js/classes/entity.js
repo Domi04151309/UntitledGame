@@ -1,7 +1,8 @@
 import ImageHelper from '../helpers/image.js'
 
 export default class Entity {
-  constructor(spriteInfo, position) {
+  constructor(name, spriteInfo, position) {
+    this.name = name
     this.spriteInfo = spriteInfo
     this.sprites = {
       i: 0,
