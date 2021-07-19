@@ -40,11 +40,14 @@ export default {
     },
     next() {
       if (this.dialog.speech.length > this.index + 1) this.index++
-      else this.$router.push('/m/0x00')
+      else {
+        StateHelper.state++
+        this.$router.push('/m')
+      }
     }
   },
   created() {
-    this.dialog = StateHelper.getDialogFromState(parseInt(this.$route.params.state, 16))
+    this.dialog = StateHelper.getDialogFromState()
     document.addEventListener('keydown', this.onKeyDown)
   },
   beforeDestroy() {

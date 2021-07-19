@@ -12,8 +12,8 @@ Vue.config.devtools = location.hostname == 'localhost'
 const routes = [
   { path: '*', component: Unknown },
   { path: '/', component: Main },
-  { path: '/d/:state', component: Dialog },
-  { path: '/m/:state', component: Map }
+  { path: '/d', component: Dialog },
+  { path: '/m', component: Map }
 ]
 
 function logError(e) {
@@ -28,6 +28,21 @@ Vue.config.errorHandler = e => {
   console.error(e)
   logError(e)
 }
+
+function isMobile() {
+  const toMatch = [
+    /Android/i,
+    /webOS/i,
+    /iPhone/i,
+    /iPad/i,
+    /iPod/i,
+    /BlackBerry/i,
+    /Windows Phone/i
+  ]
+  return toMatch.some(toMatchItem => navigator.userAgent.match(toMatchItem))
+}
+
+window.isMobile = isMobile()
 
 const router = new VueRouter({
   routes,
