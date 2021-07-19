@@ -7,6 +7,7 @@ import Tutorial from '../components/tutorial.js'
 import POverlay from '../components/p-overlay.js'
 
 import MapStore from '../helpers/map-store.js'
+import DialogView from '../helpers/dialog-view.js'
 import Counter from '../classes/counter.js'
 import Vector from '../classes/vector.js'
 import Entity from '../classes/entity.js'
@@ -123,6 +124,7 @@ export default {
       //Character specific logic
       this.entities[0].move(this.mapStore.offsceen.ctx)
       this.entities[1].followPath(this.mapStore.offsceen.ctx)
+      this.entities[2].followPath(this.mapStore.offsceen.ctx)
       //Character animation
       if (this.counters.oneFourth.increment() == 1) {
         this.entities.forEach(entity => {
@@ -211,10 +213,18 @@ export default {
     }, [3100, 3450]))
     this.entities[1].speed = CharacterCompanion.WALKING_SPEED_SLOW
     this.entities[1].addToWalkPath([2935, 3460], [2935, 3760], [3180, 3745], [3170, 3620], [3060, 3550], [3100, 3450])
+    this.entities[1].interaction = () => DialogView.show(this.entities[1].name, 'Hi Steve! Nice to meet you!')
 
     this.entities.push(new Character('Pollux', {
-      idle: ['pollux/0.png', 'pollux/1.png']
+      idle: ['pollux/0.png', 'pollux/1.png'],
+      left: ['pollux/down0.png', 'pollux/down1.png'],
+      right: ['pollux/down0.png', 'pollux/down1.png'],
+      up: ['pollux/up0.png', 'pollux/up1.png'],
+      down: ['pollux/down0.png', 'pollux/down1.png']
     }, [3170, 3300]))
+    this.entities[2].speed = CharacterCompanion.WALKING_SPEED_SLOW
+    this.entities[2].addToWalkPath([3180, 3400], [3150, 3425], [3180, 3400], [3170, 3300])
+    this.entities[2].interaction = () => DialogView.show(this.entities[2].name, 'Grrrwrwwrrrrwr...')
 
     this.entities.push(new Character('Skello', {
       idle: ['skello/0.png']
@@ -232,13 +242,16 @@ export default {
     this.entities.push(new Entity('Bruno\'s bakery', {
       idle: ['locations/bruno.png']
     }, [3095, 3410]))
+    this.entities[7].interaction = () => DialogView.show(this.entities[7].name, 'Silence...')
     this.entities.push(new Entity('the weapon shop', {
       idle: ['locations/weapons.png']
     }, [3110, 3500]))
+    this.entities[8].interaction = () => DialogView.show(this.entities[8].name, 'Get the best weapons on the island only here!')
 
     this.entities.push(new Entity('the sword', {
       idle: ['items/sword1.png', 'items/sword2.png']
     }, [3110, 3450]))
+    this.entities[9].interaction = () => DialogView.show('Narrator', 'That looks like a pretty cool sword!')
 
     this.counters.oneFourth = new Counter(ESTIMATED_FRAMERATE / 4)
     this.counters.two = new Counter(ESTIMATED_FRAMERATE * 2)
