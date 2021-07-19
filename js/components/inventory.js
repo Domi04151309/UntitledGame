@@ -9,7 +9,9 @@ export default {
   `<div v-show="shown" class="screen-center-container inventory-container">
     <div class="screen-center inventory">
       <h1>Inventory</h1>
-      <p>Not yet available!</p>
+      <div class="card inventory-grid">
+        <div v-for="index in 40" :key="index" class="card"></div>
+      </div>
     </div>
   </div>`,
   methods: {

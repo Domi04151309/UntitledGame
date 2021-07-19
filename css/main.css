@@ -448,7 +448,23 @@ pre {
   z-index: 750;
 }
 .inventory {
-  max-width: 480px;
+  max-width: 720px;
+}
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 10fr);
+  padding: 16px;
+  gap: 16px;
+}
+.inventory-grid > div {
+  aspect-ratio: 1 / 1;
+  cursor: pointer;
+}
+.inventory-grid > div:hover {
+  filter: brightness(.9);
+}
+.inventory-grid > div:active {
+  filter: brightness(.8);
 }
 
 /* game elements */
