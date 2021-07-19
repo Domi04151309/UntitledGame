@@ -7,7 +7,7 @@ export default {
       text: [
         'Use WASD to move',
         'Press E to open your inventory',
-        'Press ESC to pause the game'
+        'Press M to pause the game'
       ]
     }
   },
@@ -22,7 +22,7 @@ export default {
         || (this.index == 1 && event.keyCode == 69)
       ) {
         this.index++
-      } else if (this.index == 2 && event.keyCode == 27) {
+      } else if (this.index == 2 && event.keyCode == 77) {
         this.index++
         this.shown = false
         document.removeEventListener('keydown', this.onKeyDown)

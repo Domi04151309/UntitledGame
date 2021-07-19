@@ -27,7 +27,7 @@ export default {
       this.$router.push('/')
     },
     onKeyDown(event) {
-      if (event.keyCode == 27) this.paused = !this.paused
+      if (event.keyCode == 77) this.paused = !this.paused
     }
   },
   created() {
