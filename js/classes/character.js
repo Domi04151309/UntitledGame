@@ -19,7 +19,7 @@ class Character extends Entity {
     this.terror = 0
 
     this.randomOffset = 0
-    this.movement = new Float32Array([0, 0])
+    this.movement = new Int8Array([0, 0])
     this.speed = CharacterCompanion.WALKING_SPEED_NORMAL
     this.routeIndex = 0
     this.waypoints = []
