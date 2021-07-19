@@ -24,6 +24,7 @@ export default {
       entitiesLoaded: false,
       entities: [],
       scale: 5,
+      interaction: 0,
       tip: '',
       counters: {
         oneFourth: null,
@@ -76,7 +77,7 @@ export default {
         else if (event.keyCode == 32) this.entities[0].speed = CharacterCompanion.WALKING_SPEED_FAST
         else if (event.keyCode == 189 && this.scale > 2) this.scale -= 1
         else if (event.keyCode == 187 && this.scale < 20) this.scale += 1
-        else if (event.keyCode == 81) alert('TODO: Not yet implemented')
+        else if (event.keyCode == 81 && this.interaction != 0) this.entities[this.interaction].interaction()
     },
     onKeyUp(event) {
       if (event.keyCode == 87 || event.keyCode == 83) {
@@ -136,10 +137,13 @@ export default {
           if (entity instanceof Character && entity.energy < 100) entity.energy += 1
         })
       }
+      this.interaction = 0
       this.tip = ''
       this.entities.forEach((entity, i) => {
-        if (i != 0 && new Vector(entity.position[0] - this.entities[0].position[0], entity.position[1] - this.entities[0].position[1]).getAbs() < 24)
+        if (i != 0 && new Vector(entity.position[0] - this.entities[0].position[0], entity.position[1] - this.entities[0].position[1]).getAbs() < 24) {
+          this.interaction = i
           this.tip = 'Press Q to interact with ' + entity.name
+        }
       })
 
       //Map drawing
@@ -211,6 +215,26 @@ export default {
     this.entities.push(new Character('Pollux', {
       idle: ['pollux/0.png', 'pollux/1.png']
     }, [3170, 3300]))
+
+    this.entities.push(new Character('Skello', {
+      idle: ['skello/0.png']
+    }, [3210, 3610]))
+    this.entities.push(new Character('Skello', {
+      idle: ['skello/0.png']
+    }, [3230, 3630]))
+    this.entities.push(new Character('Skello', {
+      idle: ['skello/0.png']
+    }, [3230, 3610]))
+    this.entities.push(new Character('Skello', {
+      idle: ['skello/0.png']
+    }, [3210, 3650]))
+
+    this.entities.push(new Entity('Bruno\'s bakery', {
+      idle: ['locations/bruno.png']
+    }, [3095, 3410]))
+    this.entities.push(new Entity('the weapon shop', {
+      idle: ['locations/weapons.png']
+    }, [3110, 3500]))
 
     this.entities.push(new Entity('the sword', {
       idle: ['items/sword1.png', 'items/sword2.png']

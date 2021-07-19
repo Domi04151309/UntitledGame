@@ -10,13 +10,22 @@ const CharacterCompanion = {
 class Character extends Entity {
   constructor(name, spriteInfo, position) {
     super(name, spriteInfo, position)
+    this.interaction = () => console.log(this.name + ' did not answer...')
+
     this.health = 100
     this.energy = 75
     this.terror = 0
 
+    this.randomOffset = 0
+    this.movement = new Float32Array([0, 0])
     this.speed = CharacterCompanion.WALKING_SPEED_NORMAL
     this.routeIndex = 0
     this.waypoints = []
+  }
+  updateIdleSprite() {
+    if (this.sprites['idle'].length == 0 || this.movement[0] != 0 || this.movement[1] != 0) return
+    super.updateIdleSprite()
+    this.randomOffset = Math.round(Math.random())
   }
   chooseMatchingSprite() {
     if (this.movement[1] == -1) this.updateSprite('up')
