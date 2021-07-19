@@ -145,15 +145,17 @@ export default {
         this.scale * this.mapStore.default.width,
         this.scale * this.mapStore.default.height
       )
-      this.ctx.filter = 'none';
+      this.ctx.filter = 'none'
+      this.ctx.shadowColor = '#000'
+      this.ctx.shadowBlur = 16
       this.ctx.drawImage(
-        this.mapStore.structures,
+        this.mapStore.structuresBottom,
         x,
         y,
         this.scale * this.mapStore.default.width,
         this.scale * this.mapStore.default.height
       )
-      this.entities.forEach(entity => {
+      this.entities.slice().reverse().forEach(entity => {
         this.ctx.drawImage(
           entity.sprites.selected,
           x + (entity.position[0] - ENTITY_SIZE / 2) * this.scale + entity.getOffset(this.scale),
@@ -162,6 +164,14 @@ export default {
           this.scale * ENTITY_SIZE
         )
       })
+      this.ctx.drawImage(
+        this.mapStore.structuresTop,
+        x,
+        y,
+        this.scale * this.mapStore.default.width,
+        this.scale * this.mapStore.default.height
+      )
+      this.ctx.shadowBlur = 0
 
       this.drawCompanion.drawing = false
     }
