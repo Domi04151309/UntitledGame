@@ -3,7 +3,8 @@ import Vector from './vector.js'
 
 const CharacterCompanion = {
   WALKING_SPEED_SLOW: .25,
-  WALKING_SPEED_FAST: 1
+  WALKING_SPEED_NORMAL: 1,
+  WALKING_SPEED_FAST: 2
 }
 
 class Character extends Entity {
@@ -15,7 +16,7 @@ class Character extends Entity {
     this.energy = 75
     this.terror = 0
 
-    this.speed = CharacterCompanion.WALKING_SPEED_FAST
+    this.speed = CharacterCompanion.WALKING_SPEED_NORMAL
     this.routeIndex = 0
     this.waypoints = []
   }

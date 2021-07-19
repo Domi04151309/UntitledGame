@@ -14,6 +14,6 @@ Saved with the width set to 1920px, the quality set to 60%, and the "Crystalize"
 | --- | --- | --- |
 
 ## The Map
-The map is exported from Minecraft, then magnified by 8 and crystalized.
+The map is exported from Minecraft, then magnified by 8 and crystallized with quality set to 1 and cell size set to 4.
 
 Copyright 2021 Domi04151309

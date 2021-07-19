@@ -69,8 +69,13 @@ export default {
       } else if (event.keyCode == 68 && this.entities[0].movement[0] != 1) {
         this.entities[0].movement[0] = 1
         this.counters.oneFourth.reset()
-      } else if (event.keyCode == 189 && this.scale > 2) this.scale -= 1
+      } else if (event.keyCode == 16) this.entities[0].speed = CharacterCompanion.WALKING_SPEED_SLOW
+        else if (event.keyCode == 32) this.entities[0].speed = CharacterCompanion.WALKING_SPEED_FAST
+        else if (event.keyCode == 189 && this.scale > 2) this.scale -= 1
         else if (event.keyCode == 187 && this.scale < 20) this.scale += 1
+
+      event.preventDefault()
+      event.stopPropagation()
     },
     onKeyUp(event) {
       if (event.keyCode == 87 || event.keyCode == 83) {
@@ -79,7 +84,7 @@ export default {
       } else if (event.keyCode == 65 || event.keyCode == 68) {
         this.entities[0].movement[0] = 0
         this.counters.two.reset()
-      }
+      } else if (event.keyCode == 16 || event.keyCode == 32) this.entities[0].speed = CharacterCompanion.WALKING_SPEED_NORMAL
     },
     onWheel(event) {
       if (event.deltaY > 0 && this.scale > 2) this.scale -= 1
@@ -155,7 +160,7 @@ export default {
         this.scale * this.mapStore.default.width,
         this.scale * this.mapStore.default.height
       )
-      this.entities.slice().reverse().forEach(entity => {
+      this.entities.reduceRight((_, entity) => {
         this.ctx.drawImage(
           entity.sprites.selected,
           x + (entity.position[0] - ENTITY_SIZE / 2) * this.scale + entity.getOffset(this.scale),
@@ -163,7 +168,7 @@ export default {
           this.scale * ENTITY_SIZE,
           this.scale * ENTITY_SIZE
         )
-      })
+      }, null)
       this.ctx.drawImage(
         this.mapStore.structuresTop,
         x,
