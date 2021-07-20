@@ -10,7 +10,7 @@ An untitled game.
 ## Images
 Saved with the width set to 1920px, the quality set to 60%, and the "Crystalize"-Effect applied with quality and cell size set to 5.
 
-| ![Image](https://unsplash.com/photos/ICQRp7QaBiY/download) | ![Image](https://unsplash.com/photos/RndRFJ1v1kk/download) | ![Image](https://unsplash.com/photos/ICQRp7QaBiY/download) |
+| ![Image](https://unsplash.com/photos/ICQRp7QaBiY/download) | ![Image](https://unsplash.com/photos/RndRFJ1v1kk/download) | ![Image](https://unsplash.com/photos/9gtiGV76NnM/download) |
 | --- | --- | --- |
 
 ## The Map

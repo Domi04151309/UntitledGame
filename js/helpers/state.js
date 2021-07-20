@@ -1,21 +1,26 @@
 import Dialogs from '../data/dialogs.js'
+import Locations from '../data/locations.js'
 
 export default {
   set state(x) { localStorage.setItem('state', x) },
   get state() { return parseInt(localStorage.getItem('state') || 0) },
-  getDialogFromState() {
+  getDialogFromState(location) {
     let key = null
-    switch (this.state) {
-      case 0:
-        key = 'intro'
+    switch (location) {
+      case 'bakery':
+        if (this.state == 0) key = 'intro'
+        else if (this.state == 1) key = 'bakery'
+        else key = 'default'
         break
-      case 1:
-        key = 'bakery'
+      case 'weapons':
+        key = 'weapons'
         break
       default:
         key = 'default'
         break
     }
-    return Dialogs[key]
+    const dialog = Dialogs[key]
+    dialog.background = Locations[location]
+    return dialog
   }
 }

@@ -14,7 +14,7 @@ export default {
   </div>`,
   methods: {
     resumeGame() {
-      if (StateHelper.state == 0) this.$router.push('/d')
+      if (StateHelper.state == 0) this.$router.push('/d/bakery')
       if (StateHelper.state == 1) this.$router.push('/m')
     },
     toggleFullScreen() {

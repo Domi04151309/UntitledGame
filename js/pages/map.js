@@ -145,11 +145,11 @@ export default {
       this.entities.push(new Entity('Bruno\'s bakery', {
         idle: ['locations/bruno.png']
       }, [3095, 3410]))
-      this.entities[7].interaction = () => this.$router.push('/d')
+      this.entities[7].interaction = () => this.$router.push('/d/bakery')
       this.entities.push(new Entity('the weapon shop', {
         idle: ['locations/weapons.png']
       }, [3110, 3500]))
-      this.entities[8].interaction = () => DialogView.show(this.entities[8].name, 'Get the best weapons on the island only here!')
+      this.entities[8].interaction = () => this.$router.push('/d/weapons')
 
       this.entities.push(new Entity('the sword', {
         idle: ['items/sword1.png', 'items/sword2.png']

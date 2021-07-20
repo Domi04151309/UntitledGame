@@ -47,7 +47,7 @@ export default {
     }
   },
   created() {
-    this.dialog = StateHelper.getDialogFromState()
+    this.dialog = StateHelper.getDialogFromState(this.$route.params.location)
     document.addEventListener('keydown', this.onKeyDown)
   },
   beforeDestroy() {

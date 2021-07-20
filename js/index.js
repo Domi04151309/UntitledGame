@@ -12,7 +12,7 @@ Vue.config.devtools = location.hostname == 'localhost'
 const routes = [
   { path: '*', component: Unknown },
   { path: '/', component: Main },
-  { path: '/d', component: Dialog },
+  { path: '/d/:location', component: Dialog },
   { path: '/m', component: Map }
 ]
 

@@ -15,12 +15,16 @@ const people = {
     name: 'Bruno',
     texture: './images/bruno/0.png',
     color: 'blue'
+  },
+  elijah: {
+    name: 'Elijah',
+    texture: './images/elijah/0.png',
+    color: 'deep-purple'
   }
 }
 
 export default {
   default: {
-    background: './images/bakery.jpg',
     character: [people.steve, people.narrator],
     speech: [
       ['Hello Steve. How did you get here?', people.narrator],
@@ -31,7 +35,6 @@ export default {
     onFinish: () => {}
   },
   intro: {
-    background: './images/bakery.jpg',
     character: [people.steve, people.bruno],
     speech: [
       ['Hey Steve! Nice to meet you!', people.bruno],
@@ -53,7 +56,6 @@ export default {
     onFinish: () => StateHelper.state++
   },
   bakery: {
-    background: './images/bakery.jpg',
     character: [people.steve, people.bruno],
     speech: [
       ['Hey Steve! Nice to meet you!', people.bruno],
@@ -61,6 +63,17 @@ export default {
       ['There\'s nothing new.', people.bruno],
       ['Alright, see you later!', people.steve],
       ['Bye!', people.bruno]
+    ],
+    onFinish: () => {}
+  },
+  weapons: {
+    character: [people.steve, people.elijah],
+    speech: [
+      ['Hey Steve! Nice to meet you!', people.elijah],
+      ['Hi Skello! Do you have any new weapons?', people.steve],
+      ['Sadly, I don\'t.', people.elijah],
+      ['Alright, see you later!', people.steve],
+      ['Bye!', people.elijah]
     ],
     onFinish: () => {}
   }
