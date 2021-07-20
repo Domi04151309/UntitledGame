@@ -1,4 +1,11 @@
+import StateHelper from '../helpers/state.js'
+
 const people = {
+  narrator: {
+    name: 'Narrator',
+    texture: './images/narrator.png',
+    color: 'blue'
+  },
   steve: {
     name: 'Steve',
     texture: './images/steve/0.png',
@@ -12,6 +19,17 @@ const people = {
 }
 
 export default {
+  default: {
+    background: './images/bakery.jpg',
+    character: [people.steve, people.narrator],
+    speech: [
+      ['Hello Steve. How did you get here?', people.narrator],
+      ['Who are you?', people.steve],
+      ['It\'s time to leave, Steve.', people.narrator],
+      ['Wait!', people.steve]
+    ],
+    onFinish: () => {}
+  },
   intro: {
     background: './images/bakery.jpg',
     character: [people.steve, people.bruno],
@@ -31,6 +49,19 @@ export default {
       ['Great, thanks a lot! Meet me outside the city wall later!', people.bruno],
       ['Alright, see you later!', people.steve],
       ['Bye!', people.bruno]
-    ]
+    ],
+    onFinish: () => StateHelper.state++
+  },
+  bakery: {
+    background: './images/bakery.jpg',
+    character: [people.steve, people.bruno],
+    speech: [
+      ['Hey Steve! Nice to meet you!', people.bruno],
+      ['Hi Bruno! What\'s the news?', people.steve],
+      ['There\'s nothing new.', people.bruno],
+      ['Alright, see you later!', people.steve],
+      ['Bye!', people.bruno]
+    ],
+    onFinish: () => {}
   }
 }

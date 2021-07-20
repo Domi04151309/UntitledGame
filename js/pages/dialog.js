@@ -41,7 +41,7 @@ export default {
     next() {
       if (this.dialog.speech.length > this.index + 1) this.index++
       else {
-        StateHelper.state++
+        this.dialog.onFinish()
         this.$router.push('/m')
       }
     }

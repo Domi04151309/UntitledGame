@@ -244,7 +244,7 @@ export default {
     this.entities.push(new Entity('Bruno\'s bakery', {
       idle: ['locations/bruno.png']
     }, [3095, 3410]))
-    this.entities[7].interaction = () => DialogView.show(this.entities[7].name, 'Silence...')
+    this.entities[7].interaction = () => this.$router.push('/d')
     this.entities.push(new Entity('the weapon shop', {
       idle: ['locations/weapons.png']
     }, [3110, 3500]))
