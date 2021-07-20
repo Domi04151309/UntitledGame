@@ -45,13 +45,14 @@ export default {
     <Menu></Menu>
     <Inventory></Inventory>
     <main class="full-height">
-      <Stats :character="this.entities[0]"></Stats>
+      <Stats :entity="entities[0]"></Stats>
+      <Stats class="right" :entity="interaction != 0 ? entities[interaction] : null"></Stats>
       <div class="quest">
         <h2>Quest</h2>
         <p>Explore the world!</p>
       </div>
       <Tutorial></Tutorial>
-      <POverlay :data="{ i: counters.oneFourth.count, fps: this.drawCompanion.fps, entities: this.entities.length, scale: this.scale, position: this.entities[0].position, movement: this.entities[0].movement }"></POverlay>
+      <POverlay :data="{ i: counters.oneFourth.count, fps: drawCompanion.fps, entities: entities.length, scale: scale, position: entities[0].position, movement: entities[0].movement }"></POverlay>
       <p class="tip">{{ tip }}</p>
       <canvas ref="canvas"></canvas>
     </main>

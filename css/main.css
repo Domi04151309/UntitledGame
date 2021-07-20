@@ -490,6 +490,11 @@ canvas {
   width: 240px;
   max-width: 50vw;
 }
+.stats.right {
+  left: auto;
+  right: 0;
+  text-align: right;
+}
 .stats .relative {
   padding-bottom: 4px;
   font-size: 12px;
