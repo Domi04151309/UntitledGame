@@ -50,7 +50,7 @@ export default {
         <p>Explore the world!</p>
       </div>
       <Tutorial></Tutorial>
-      <POverlay :data="{ i: counters.oneFourth.count, fps: drawCompanion.fps, entities: entities.length, scale: scale, position: entities[0].position, movement: entities[0].movement }"></POverlay>
+      <POverlay :data="{ i: counters.oneFourth?.count, fps: drawCompanion.fps, entities: entities.length, scale: scale, position: entities[0]?.position, movement: entities[0]?.movement }"></POverlay>
       <p class="tip">{{ tip }}</p>
       <canvas ref="canvas"></canvas>
     </main>
@@ -114,13 +114,24 @@ export default {
       this.$refs.canvas.height = window.innerHeight
     },
     async setupDrawing() {
+      this.ctx = this.$refs.canvas.getContext('2d', { alpha: false })
+      this.windowResize()
+
+      this.ctx.fillStyle = '#000'
+      this.ctx.strokeStyle  = '#888'
+      this.ctx.lineWidth = 4
+      this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
+      this.ctx.beginPath()
+      this.ctx.arc(window.innerWidth / 2, window.innerHeight / 2, 48, 0, 2 * Math.PI)
+      this.ctx.stroke()
+
       this.counters.oneFourth = new Counter(ESTIMATED_FRAMERATE / 4)
       this.counters.two = new Counter(ESTIMATED_FRAMERATE * 2)
       this.counters.five = new Counter(ESTIMATED_FRAMERATE * 5)
 
+      await MapStore.load()
       EntityStore.load(this)
       SaveState.load(this)
-      await MapStore.load()
       for (const entity of this.entities) {
         await entity.loadSprites()
       }
@@ -138,9 +149,9 @@ export default {
       }
 
       //Character specific logic
-      this.entities[0].move(MapStore.offsceen.ctx)
+      this.entities[0].move()
       this.entities.forEach((entity, i) => {
-        if (i != 0 && entity instanceof Character) entity.followPath(MapStore.offsceen.ctx)
+        if (i != 0 && entity instanceof Character) entity.followPath()
       })
       //Character animation
       if (this.counters.oneFourth.increment() == 1) {
@@ -211,16 +222,12 @@ export default {
       if (this.drawCompanion.running) requestAnimationFrame(this.draw)
     }
   },
-  created() {
+  mounted() {
+    this.setupDrawing()
     document.addEventListener('keydown', this.onKeyDown)
     document.addEventListener('keyup', this.onKeyUp)
     document.addEventListener('wheel', this.onWheel)
     window.addEventListener('resize', this.windowResize)
-    this.setupDrawing()
-  },
-  mounted() {
-    this.ctx = this.$refs.canvas.getContext('2d', { alpha: false })
-    this.windowResize()
   },
   beforeDestroy() {
     document.removeEventListener('keydown', this.onKeyDown)

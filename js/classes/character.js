@@ -1,6 +1,7 @@
 import Entity from './entity.js'
 import Vector from './vector.js'
 
+import MapStore from '../helpers/map-store.js'
 import DialogView from '../helpers/dialog-view.js'
 
 const CharacterCompanion = {
@@ -40,12 +41,12 @@ class Character extends Entity {
   getOffset(scale) {
     return this.movement[0] == 0 && this.movement[1] == 0 ? this.randomOffset * scale : 0
   }
-  move(ctx) {
+  move() {
     const vector = new Vector(...this.movement)
     const movement = vector.normalize().multiply(this.speed).toArray()
 
-    const newPosX = ctx.getImageData(this.position[0] + movement[0], this.position[1], 1, 1).data
-    const newPosY = ctx.getImageData(this.position[0], this.position[1] + movement[1], 1, 1).data
+    const newPosX = MapStore.offsceen.ctx.getImageData(this.position[0] + movement[0], this.position[1], 1, 1).data
+    const newPosY = MapStore.offsceen.ctx.getImageData(this.position[0], this.position[1] + movement[1], 1, 1).data
 
     if (newPosX[0] == 0 && newPosX[2] == 0) this.position[0] += movement[0]
     else if (newPosX[2] != 0) this.position[0] += movement[0] * .5
@@ -58,7 +59,31 @@ class Character extends Entity {
   addToWalkPath(...waypoints) {
     waypoints.forEach(waypoint => this.waypoints.push(waypoint))
   }
-  followPath(ctx) {
+  generateRandomPath(amount) {
+    const waypoints = []
+    let lastPoint = this.position
+
+    const randomOffset = () => {
+      const number = Math.floor(Math.random() * 51)
+      if (Math.random() < .5) return number
+      else return -number
+    }
+    const randomPosition = () => {
+      const point = [lastPoint[0] + randomOffset(), lastPoint[1] + randomOffset()]
+      if (MapStore.offsceen.ctx.getImageData(point[0], point[1], 1, 1).data[0] > 0)
+        return randomPosition()
+      else
+        return point
+    }
+
+    for (let i = 0; i < amount / 2 - 1; i++) {
+      const point = randomPosition()
+      waypoints.push(point)
+      lastPoint = point
+    }
+    this.addToWalkPath(...waypoints, ...waypoints.reverse(), this.position)
+  }
+  followPath() {
     if (this.waypoints.length == 0) return
 
     const distance = this.position[0] - this.waypoints[this.routeIndex][0] + this.position[1] - this.waypoints[this.routeIndex][1]
@@ -69,7 +94,7 @@ class Character extends Entity {
 
     const vector = new Vector(this.waypoints[this.routeIndex][0] - this.position[0], this.waypoints[this.routeIndex][1] - this.position[1])
     this.movement = vector.normalize().toArray().map(x => Math.round(x))
-    this.move(ctx)
+    this.move(MapStore.offsceen.ctx)
   }
 }
 

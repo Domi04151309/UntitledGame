@@ -64,6 +64,13 @@ export default {
       }, [3110, 3450]))
       this.entities[9].interaction = () => DialogView.show('Narrator', 'That looks like a pretty cool sword!')
 
+      this.entities.push(new Character('Entity Test', {
+        idle: ['narrator.png']
+      }, [3090, 3595]))
+      this.entities[10].interaction = () => DialogView.show('Entity Test', '*%$#*%$#*%$#!')
+      this.entities[10].speed = CharacterCompanion.WALKING_SPEED_SLOW
+      this.entities[10].generateRandomPath(8)
+
       this.loaded = true
     }
     context.entities = this.entities
