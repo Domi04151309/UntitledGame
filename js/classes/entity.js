@@ -18,13 +18,15 @@ export default class Entity {
     this.interaction = () => DialogView.show('Narrator', this.name + ' did not move...')
   }
   async loadSprites() {
-    for (const category in this.spriteInfo) {
-      for (const sprite of this.spriteInfo[category]) {
-        this.sprites[category].push(await ImageHelper.loadImage(sprite))
+    if (!this.sprites.loaded) {
+      for (const category in this.spriteInfo) {
+        for (const sprite of this.spriteInfo[category]) {
+          this.sprites[category].push(await ImageHelper.loadImage(sprite))
+        }
       }
+      this.updateSprite()
+      this.sprites.loaded = true
     }
-    this.updateSprite()
-    this.sprites.loaded = true
   }
   updateSprite(category = 'idle') {
     if (this.sprites[category].length == 0) return
