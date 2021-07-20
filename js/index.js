@@ -44,6 +44,19 @@ function isMobile() {
 
 window.isMobile = isMobile()
 
+const settings = JsonHelper.get('settings', () => {
+  return {
+    graphics: 'high'
+  }
+})
+window.settings = new Proxy(settings, {
+  set(obj, prop, value) {
+    obj[prop] = value
+    JsonHelper.set('settings', obj)
+    return true
+  }
+})
+
 const router = new VueRouter({
   routes,
   scrollBehavior() {

@@ -23,7 +23,6 @@ export default {
     return {
       ctx: null,
       mapStore: null,
-      entitiesLoaded: false,
       entities: [],
       scale: 5,
       interaction: 0,
@@ -35,7 +34,6 @@ export default {
       },
       drawCompanion: {
         running: true,
-        drawing: false,
         lastCalled: 0,
         fps: 0,
         frameCounter: 0
@@ -98,21 +96,80 @@ export default {
       this.$refs.canvas.width = window.innerWidth
       this.$refs.canvas.height = window.innerHeight
     },
-    async draw(time = 0) {
-      if (this.drawCompanion.running) requestAnimationFrame(this.draw)
+    async setupDrawing() {
+      this.mapStore = MapStore
 
-      if (this.drawCompanion.drawing) return
-      this.drawCompanion.drawing = true
+      this.entities.push(new Character('Steve', {
+        idle: ['steve/0.png', 'steve/1.png'],
+        left: ['steve/left0.png', 'steve/left1.png'],
+        right: ['steve/right0.png', 'steve/right1.png'],
+        up: ['steve/up0.png', 'steve/up1.png'],
+        down: ['steve/down0.png', 'steve/down1.png']
+      }, [3190, 3370]))
 
-      //Init
-      if (!this.mapStore.loaded) await this.mapStore.load()
-      if (!this.entitiesLoaded) {
-        for (const entity of this.entities) {
-          await entity.loadSprites()
-        }
-        this.entitiesLoaded = true
+      this.entities.push(new Character('Bruno', {
+        idle: ['bruno/0.png', 'bruno/1.png'],
+        left: ['bruno/down0.png', 'bruno/down1.png'],
+        right: ['bruno/down0.png', 'bruno/down1.png'],
+        up: ['bruno/up0.png', 'bruno/up1.png'],
+        down: ['bruno/down0.png', 'bruno/down1.png']
+      }, [3100, 3450]))
+      this.entities[1].speed = CharacterCompanion.WALKING_SPEED_SLOW
+      this.entities[1].addToWalkPath([2935, 3460], [2935, 3760], [3180, 3745], [3170, 3620], [3060, 3550], [3100, 3450])
+      this.entities[1].interaction = () => DialogView.show(this.entities[1].name, 'Hi Steve! Nice to meet you!')
+
+      this.entities.push(new Character('Pollux', {
+        idle: ['pollux/0.png', 'pollux/1.png'],
+        left: ['pollux/down0.png', 'pollux/down1.png'],
+        right: ['pollux/down0.png', 'pollux/down1.png'],
+        up: ['pollux/up0.png', 'pollux/up1.png'],
+        down: ['pollux/down0.png', 'pollux/down1.png']
+      }, [3170, 3300]))
+      this.entities[2].speed = CharacterCompanion.WALKING_SPEED_SLOW
+      this.entities[2].addToWalkPath([3180, 3400], [3150, 3425], [3180, 3400], [3170, 3300])
+      this.entities[2].interaction = () => DialogView.show(this.entities[2].name, 'Grrrwrwwrrrrwr...')
+
+      this.entities.push(new Character('Skello', {
+        idle: ['skello/0.png']
+      }, [3210, 3610]))
+      this.entities.push(new Character('Skello', {
+        idle: ['skello/0.png']
+      }, [3230, 3630]))
+      this.entities.push(new Character('Skello', {
+        idle: ['skello/0.png']
+      }, [3230, 3610]))
+      this.entities.push(new Character('Skello', {
+        idle: ['skello/0.png']
+      }, [3210, 3650]))
+
+      this.entities.push(new Entity('Bruno\'s bakery', {
+        idle: ['locations/bruno.png']
+      }, [3095, 3410]))
+      this.entities[7].interaction = () => this.$router.push('/d')
+      this.entities.push(new Entity('the weapon shop', {
+        idle: ['locations/weapons.png']
+      }, [3110, 3500]))
+      this.entities[8].interaction = () => DialogView.show(this.entities[8].name, 'Get the best weapons on the island only here!')
+
+      this.entities.push(new Entity('the sword', {
+        idle: ['items/sword1.png', 'items/sword2.png']
+      }, [3110, 3450]))
+      this.entities[9].interaction = () => DialogView.show('Narrator', 'That looks like a pretty cool sword!')
+
+      this.counters.oneFourth = new Counter(ESTIMATED_FRAMERATE / 4)
+      this.counters.two = new Counter(ESTIMATED_FRAMERATE * 2)
+      this.counters.five = new Counter(ESTIMATED_FRAMERATE * 5)
+
+      SaveState.load(this)
+
+      await this.mapStore.load()
+      for (const entity of this.entities) {
+        await entity.loadSprites()
       }
 
+      if (this.drawCompanion.running) requestAnimationFrame(this.draw)
+    },
+    draw(time = 0) {
       //FPS
       if ((time - this.drawCompanion.lastCalled) / 1000 > 1) {
         this.drawCompanion.lastCalled = time
@@ -124,8 +181,9 @@ export default {
 
       //Character specific logic
       this.entities[0].move(this.mapStore.offsceen.ctx)
-      this.entities[1].followPath(this.mapStore.offsceen.ctx)
-      this.entities[2].followPath(this.mapStore.offsceen.ctx)
+      this.entities.forEach((entity, i) => {
+        if (i != 0 && entity instanceof Character) entity.followPath(this.mapStore.offsceen.ctx)
+      })
       //Character animation
       if (this.counters.oneFourth.increment() == 1) {
         this.entities.forEach(entity => {
@@ -154,7 +212,7 @@ export default {
       const y = -this.entities[0].position[1] * this.scale + (window.innerHeight + this.scale * ENTITY_SIZE) / 2
       this.ctx.imageSmoothingEnabled = false
       this.ctx.fillStyle = '#1C50F1'
-      this.ctx.filter = 'brightness(90%)'
+      if (window.settings.graphics == 'high') this.ctx.filter = 'brightness(90%)'
       //this.ctx.filter = 'brightness(25%) sepia(50%)'
       this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
       this.ctx.drawImage(
@@ -166,7 +224,7 @@ export default {
       )
       this.ctx.filter = 'none'
       this.ctx.shadowColor = '#000'
-      this.ctx.shadowBlur = 16
+      if (window.settings.graphics == 'high') this.ctx.shadowBlur = 16
       this.ctx.drawImage(
         this.mapStore.structuresBottom,
         x,
@@ -192,80 +250,15 @@ export default {
       )
       this.ctx.shadowBlur = 0
 
-      this.drawCompanion.drawing = false
+      if (this.drawCompanion.running) requestAnimationFrame(this.draw)
     }
   },
   created() {
-    this.mapStore = MapStore
-
-    this.entities.push(new Character('Steve', {
-      idle: ['steve/0.png', 'steve/1.png'],
-      left: ['steve/left0.png', 'steve/left1.png'],
-      right: ['steve/right0.png', 'steve/right1.png'],
-      up: ['steve/up0.png', 'steve/up1.png'],
-      down: ['steve/down0.png', 'steve/down1.png']
-    }, [3190, 3370]))
-
-    this.entities.push(new Character('Bruno', {
-      idle: ['bruno/0.png', 'bruno/1.png'],
-      left: ['bruno/down0.png', 'bruno/down1.png'],
-      right: ['bruno/down0.png', 'bruno/down1.png'],
-      up: ['bruno/up0.png', 'bruno/up1.png'],
-      down: ['bruno/down0.png', 'bruno/down1.png']
-    }, [3100, 3450]))
-    this.entities[1].speed = CharacterCompanion.WALKING_SPEED_SLOW
-    this.entities[1].addToWalkPath([2935, 3460], [2935, 3760], [3180, 3745], [3170, 3620], [3060, 3550], [3100, 3450])
-    this.entities[1].interaction = () => DialogView.show(this.entities[1].name, 'Hi Steve! Nice to meet you!')
-
-    this.entities.push(new Character('Pollux', {
-      idle: ['pollux/0.png', 'pollux/1.png'],
-      left: ['pollux/down0.png', 'pollux/down1.png'],
-      right: ['pollux/down0.png', 'pollux/down1.png'],
-      up: ['pollux/up0.png', 'pollux/up1.png'],
-      down: ['pollux/down0.png', 'pollux/down1.png']
-    }, [3170, 3300]))
-    this.entities[2].speed = CharacterCompanion.WALKING_SPEED_SLOW
-    this.entities[2].addToWalkPath([3180, 3400], [3150, 3425], [3180, 3400], [3170, 3300])
-    this.entities[2].interaction = () => DialogView.show(this.entities[2].name, 'Grrrwrwwrrrrwr...')
-
-    this.entities.push(new Character('Skello', {
-      idle: ['skello/0.png']
-    }, [3210, 3610]))
-    this.entities.push(new Character('Skello', {
-      idle: ['skello/0.png']
-    }, [3230, 3630]))
-    this.entities.push(new Character('Skello', {
-      idle: ['skello/0.png']
-    }, [3230, 3610]))
-    this.entities.push(new Character('Skello', {
-      idle: ['skello/0.png']
-    }, [3210, 3650]))
-
-    this.entities.push(new Entity('Bruno\'s bakery', {
-      idle: ['locations/bruno.png']
-    }, [3095, 3410]))
-    this.entities[7].interaction = () => this.$router.push('/d')
-    this.entities.push(new Entity('the weapon shop', {
-      idle: ['locations/weapons.png']
-    }, [3110, 3500]))
-    this.entities[8].interaction = () => DialogView.show(this.entities[8].name, 'Get the best weapons on the island only here!')
-
-    this.entities.push(new Entity('the sword', {
-      idle: ['items/sword1.png', 'items/sword2.png']
-    }, [3110, 3450]))
-    this.entities[9].interaction = () => DialogView.show('Narrator', 'That looks like a pretty cool sword!')
-
-    this.counters.oneFourth = new Counter(ESTIMATED_FRAMERATE / 4)
-    this.counters.two = new Counter(ESTIMATED_FRAMERATE * 2)
-    this.counters.five = new Counter(ESTIMATED_FRAMERATE * 5)
-
     document.addEventListener('keydown', this.onKeyDown)
     document.addEventListener('keyup', this.onKeyUp)
     document.addEventListener('wheel', this.onWheel)
     window.addEventListener('resize', this.windowResize)
-
-    SaveState.load(this)
-    this.draw()
+    this.setupDrawing()
   },
   mounted() {
     this.ctx = this.$refs.canvas.getContext('2d', { alpha: false })

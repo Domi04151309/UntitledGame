@@ -1,7 +1,6 @@
 import ImageHelper from '../helpers/image.js'
 
 export default {
-  loaded: false,
   default: null,
   structuresTop: null,
   structuresBottom: null,
@@ -26,7 +25,5 @@ export default {
       this.default.width,
       this.default.height
     )
-
-    this.loaded = true
   }
 }
