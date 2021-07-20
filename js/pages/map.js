@@ -42,7 +42,7 @@ export default {
   },
   template:
   `<div>
-    <Menu></Menu>
+    <Menu v-on:paused="onPaused()"></Menu>
     <Inventory></Inventory>
     <main class="full-height">
       <Stats :entity="entities[0]"></Stats>
@@ -65,37 +65,51 @@ export default {
     POverlay
   },
   methods: {
+    onPaused() {
+      if (this.drawCompanion.running) {
+        this.drawCompanion.running = false
+      } else {
+        this.drawCompanion.running = true
+        requestAnimationFrame(this.draw)
+      }
+    },
     onKeyDown(event) {
-      if (event.keyCode == 87 && this.entities[0].movement[1] != -1) {
-        this.entities[0].movement[1] = -1
-        this.counters.oneFourth.reset()
-      } else if (event.keyCode == 65 && this.entities[0].movement[0] != -1) {
-        this.entities[0].movement[0] = -1
-        this.counters.oneFourth.reset()
-      } else if (event.keyCode == 83 && this.entities[0].movement[1] != 1) {
-        this.entities[0].movement[1] = 1
-        this.counters.oneFourth.reset()
-      } else if (event.keyCode == 68 && this.entities[0].movement[0] != 1) {
-        this.entities[0].movement[0] = 1
-        this.counters.oneFourth.reset()
-      } else if (event.keyCode == 16) this.entities[0].speed = CharacterCompanion.WALKING_SPEED_SLOW
-        else if (event.keyCode == 32) this.entities[0].speed = CharacterCompanion.WALKING_SPEED_FAST
-        else if (event.keyCode == 189 && this.scale > 2) this.scale -= 1
-        else if (event.keyCode == 187 && this.scale < 20) this.scale += 1
-        else if (event.keyCode == 81 && this.interaction != 0) this.entities[this.interaction].interaction()
+      if (this.drawCompanion.running) {
+        if (event.keyCode == 87 && this.entities[0].movement[1] != -1) {
+          this.entities[0].movement[1] = -1
+          this.counters.oneFourth.reset()
+        } else if (event.keyCode == 65 && this.entities[0].movement[0] != -1) {
+          this.entities[0].movement[0] = -1
+          this.counters.oneFourth.reset()
+        } else if (event.keyCode == 83 && this.entities[0].movement[1] != 1) {
+          this.entities[0].movement[1] = 1
+          this.counters.oneFourth.reset()
+        } else if (event.keyCode == 68 && this.entities[0].movement[0] != 1) {
+          this.entities[0].movement[0] = 1
+          this.counters.oneFourth.reset()
+        } else if (event.keyCode == 16) this.entities[0].speed = CharacterCompanion.WALKING_SPEED_SLOW
+          else if (event.keyCode == 32) this.entities[0].speed = CharacterCompanion.WALKING_SPEED_FAST
+          else if (event.keyCode == 189 && this.scale > 2) this.scale -= 1
+          else if (event.keyCode == 187 && this.scale < 20) this.scale += 1
+          else if (event.keyCode == 81 && this.interaction != 0) this.entities[this.interaction].interaction()
+      }
     },
     onKeyUp(event) {
-      if (event.keyCode == 87 || event.keyCode == 83) {
-        this.entities[0].movement[1] = 0
-        this.counters.two.reset()
-      } else if (event.keyCode == 65 || event.keyCode == 68) {
-        this.entities[0].movement[0] = 0
-        this.counters.two.reset()
-      } else if (event.keyCode == 16 || event.keyCode == 32) this.entities[0].speed = CharacterCompanion.WALKING_SPEED_NORMAL
+      if (this.drawCompanion.running) {
+        if (event.keyCode == 87 || event.keyCode == 83) {
+          this.entities[0].movement[1] = 0
+          this.counters.two.reset()
+        } else if (event.keyCode == 65 || event.keyCode == 68) {
+          this.entities[0].movement[0] = 0
+          this.counters.two.reset()
+        } else if (event.keyCode == 16 || event.keyCode == 32) this.entities[0].speed = CharacterCompanion.WALKING_SPEED_NORMAL
+      }
     },
     onWheel(event) {
-      if (event.deltaY > 0 && this.scale > 2) this.scale -= 1
-      else if (event.deltaY < 0 && this.scale < 20) this.scale += 1
+      if (this.drawCompanion.running) {
+        if (event.deltaY > 0 && this.scale > 2) this.scale -= 1
+        else if (event.deltaY < 0 && this.scale < 20) this.scale += 1
+      }
     },
     windowResize() {
       this.$refs.canvas.width = window.innerWidth

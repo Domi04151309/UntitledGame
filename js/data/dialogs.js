@@ -70,7 +70,7 @@ export default {
     character: [people.steve, people.elijah],
     speech: [
       ['Hey Steve! Nice to meet you!', people.elijah],
-      ['Hi Skello! Do you have any new weapons?', people.steve],
+      ['Hi Elijah! Do you have any new weapons?', people.steve],
       ['Sadly, I don\'t.', people.elijah],
       ['Alright, see you later!', people.steve],
       ['Bye!', people.elijah]

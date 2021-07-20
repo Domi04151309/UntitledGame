@@ -22,6 +22,7 @@ export default {
   methods: {
     resumeGame() {
       this.paused = false
+      this.$emit('paused')
     },
     toggleGraphics() {
       if (this.graphics == 'high') window.settings.graphics = 'low'
@@ -37,7 +38,10 @@ export default {
       this.$router.push('/')
     },
     onKeyDown(event) {
-      if (event.keyCode == 77) this.paused = !this.paused
+      if (event.keyCode == 77) {
+        this.paused = !this.paused
+        this.$emit('paused')
+      }
     }
   },
   created() {
