@@ -14,9 +14,11 @@ class Character extends Entity {
     super(name, spriteInfo, position)
     this.interaction = () => DialogView.show('Narrator', this.name + ' did not answer...')
 
-    this.health = 100
-    this.energy = 75
-    this.terror = 0
+    this.data = {
+      health: 100,
+      energy: 75,
+      terror: 0
+    }
 
     this.randomOffset = 0
     this.movement = new Int8Array([0, 0])

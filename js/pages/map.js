@@ -6,6 +6,7 @@ import Stats from '../components/stats.js'
 import Tutorial from '../components/tutorial.js'
 import POverlay from '../components/p-overlay.js'
 
+import SaveState from '../helpers/save-state.js'
 import MapStore from '../helpers/map-store.js'
 import DialogView from '../helpers/dialog-view.js'
 import Counter from '../classes/counter.js'
@@ -48,7 +49,7 @@ export default {
     <main class="full-height">
       <Stats :character="this.entities[0]"></Stats>
       <Tutorial></Tutorial>
-      <POverlay :data="{ i: counters.oneFourth.count, fps: this.drawCompanion.fps, scale: this.scale, position: this.entities[0].position, movement: this.entities[0].movement }"></POverlay>
+      <POverlay :data="{ i: counters.oneFourth.count, fps: this.drawCompanion.fps, entities: this.entities.length, scale: this.scale, position: this.entities[0].position, movement: this.entities[0].movement }"></POverlay>
       <p class="tip">{{ tip }}</p>
       <canvas ref="canvas"></canvas>
     </main>
@@ -136,7 +137,7 @@ export default {
       }
       if (this.counters.five.increment() == 1) {
         this.entities.forEach(entity => {
-          if (entity instanceof Character && entity.energy < 100) entity.energy += 1
+          if (entity instanceof Character && entity.data.energy < 100) entity.data.energy += 1
         })
       }
       this.interaction = 0
@@ -153,7 +154,8 @@ export default {
       const y = -this.entities[0].position[1] * this.scale + (window.innerHeight + this.scale * ENTITY_SIZE) / 2
       this.ctx.imageSmoothingEnabled = false
       this.ctx.fillStyle = '#1C50F1'
-      this.ctx.filter = 'brightness(90%)';
+      this.ctx.filter = 'brightness(90%)'
+      //this.ctx.filter = 'brightness(25%) sepia(50%)'
       this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
       this.ctx.drawImage(
         this.mapStore.default,
@@ -262,6 +264,7 @@ export default {
     document.addEventListener('wheel', this.onWheel)
     window.addEventListener('resize', this.windowResize)
 
+    SaveState.load(this)
     this.draw()
   },
   mounted() {
@@ -274,6 +277,7 @@ export default {
     document.removeEventListener('wheel', this.onWheel)
     window.removeEventListener('resize', this.windowResize)
 
+    SaveState.save(this)
     this.drawCompanion.running = false
   }
 }
