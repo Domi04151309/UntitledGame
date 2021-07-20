@@ -25,7 +25,8 @@ export default {
     },
     toggleGraphics() {
       if (this.graphics == 'high') window.settings.graphics = 'low'
-      else if (this.graphics == 'low') window.settings.graphics = 'high'
+      else if (this.graphics == 'low') window.settings.graphics = 'medium'
+      else if (this.graphics == 'medium') window.settings.graphics = 'high'
       this.graphics = window.settings.graphics
     },
     toggleFullScreen() {
