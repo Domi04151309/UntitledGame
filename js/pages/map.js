@@ -46,6 +46,10 @@ export default {
     <Inventory></Inventory>
     <main class="full-height">
       <Stats :character="this.entities[0]"></Stats>
+      <div class="quest">
+        <h2>Quest</h2>
+        <p>Explore the world!</p>
+      </div>
       <Tutorial></Tutorial>
       <POverlay :data="{ i: counters.oneFourth.count, fps: this.drawCompanion.fps, entities: this.entities.length, scale: this.scale, position: this.entities[0].position, movement: this.entities[0].movement }"></POverlay>
       <p class="tip">{{ tip }}</p>

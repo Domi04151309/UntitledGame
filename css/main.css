@@ -409,8 +409,6 @@ pre {
   max-width: 480px;
 }
 
-/* p-overlay */
-
 /* dialogs */
 .dialog-character {
   position: fixed;
@@ -477,7 +475,7 @@ canvas {
 .full-height {
   height: 100vh;
 }
-.stats, .tutorial, .p-overlay, .tip {
+.stats, .tutorial, .quest, .p-overlay, .tip {
   display: inline-block;
   position: fixed;
   margin: 16px;
@@ -511,6 +509,15 @@ canvas {
   font-size: 14px;
   color: var(--text-color-secondary);
   animation: fadeIn 2s;
+}
+.quest {
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+}
+.quest > * {
+  margin: 0;
+  color: var(--text-color);
 }
 .p-overlay {
   bottom: 0;
