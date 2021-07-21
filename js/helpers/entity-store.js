@@ -65,7 +65,7 @@ export default {
       }, [3110, 3450]))
       this.entities[9].interaction = () => DialogView.show('Narrator', 'That looks like a pretty cool sword!')
 
-      for (let i = 10; i < 20; i++) {
+      for (let i = 10; i < 30; i++) {
         this.entities.push(new Character('Villager', {
           idle: ['villager/0.png'],
           left: ['villager/down0.png', 'villager/down1.png'],

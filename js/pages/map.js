@@ -34,7 +34,8 @@ export default {
         running: true,
         lastCalled: 0,
         fps: 0,
-        frameCounter: 0
+        frameCounter: 0,
+        renderedEntities: 0
       }
     }
   },
@@ -50,7 +51,7 @@ export default {
         <p>Explore the world!</p>
       </div>
       <Tutorial></Tutorial>
-      <POverlay :data="{ i: counters.oneFourth?.count, fps: drawCompanion.fps, entities: entities.length, scale: scale, position: entities[0]?.position, movement: entities[0]?.movement }"></POverlay>
+      <POverlay :data="{ i: counters.oneFourth?.count, fps: drawCompanion.fps, scale: scale, entities: [drawCompanion.renderedEntities, entities.length], position: entities[0]?.position, movement: entities[0]?.movement }"></POverlay>
       <p class="tip">{{ tip }}</p>
       <canvas ref="canvas"></canvas>
     </main>
@@ -148,11 +149,6 @@ export default {
         this.drawCompanion.frameCounter++
       }
 
-      //Character specific logic
-      this.entities[0].move()
-      this.entities.forEach((entity, i) => {
-        if (i != 0 && entity instanceof Character) entity.followPath()
-      })
       //Character animation
       if (this.counters.oneFourth.increment() == 1) {
         this.entities.forEach(entity => {
@@ -167,14 +163,6 @@ export default {
           if (entity instanceof Character && entity.data.energy < 100) entity.data.energy += 1
         })
       }
-      this.interaction = 0
-      this.tip = ''
-      this.entities.forEach((entity, i) => {
-        if (i != 0 && new Vector(entity.position[0] - this.entities[0].position[0], entity.position[1] - this.entities[0].position[1]).getAbs() < 24) {
-          this.interaction = i
-          this.tip = 'Press Q to interact with ' + entity.name
-        }
-      })
 
       //Map drawing
       const x = -this.entities[0].position[0] * this.scale + window.innerWidth / 2
@@ -191,6 +179,7 @@ export default {
         this.scale * MapStore.default.height
       )
       this.ctx.filter = 'none'
+      //Structures
       this.ctx.shadowColor = '#000'
       if (window.settings.graphics == 'high') this.ctx.shadowBlur = 16
       this.ctx.drawImage(
@@ -200,15 +189,38 @@ export default {
         this.scale * MapStore.default.width,
         this.scale * MapStore.default.height
       )
+      //Entities
+      let i = this.entities.length - 1
+      this.drawCompanion.renderedEntities = 0
+      this.interaction = 0
+      this.tip = ''
       this.entities.reduceRight((_, entity) => {
-        this.ctx.drawImage(
-          entity.sprites.selected,
-          x + (entity.position[0] - ENTITY_SIZE / 2) * this.scale + entity.getOffset(this.scale),
-          y + (entity.position[1] - ENTITY_SIZE) * this.scale,
-          this.scale * ENTITY_SIZE,
-          this.scale * ENTITY_SIZE
-        )
+        const posX = x + (entity.position[0] - ENTITY_SIZE / 2) * this.scale + entity.getOffset(this.scale)
+        const posY = y + (entity.position[1] - ENTITY_SIZE) * this.scale
+        if (
+          posX > - ENTITY_SIZE * this.scale
+          && posX < window.innerWidth + ENTITY_SIZE * this.scale
+          && posY > - ENTITY_SIZE * this.scale
+          && posY < window.innerHeight + ENTITY_SIZE * this.scale
+        ) {
+          if (i == 0) entity.move()
+          else if (i != 0 && entity instanceof Character) entity.followPath()
+          this.ctx.drawImage(
+            entity.sprites.selected,
+            posX,
+            posY,
+            this.scale * ENTITY_SIZE,
+            this.scale * ENTITY_SIZE
+          )
+          if (i != 0 && new Vector(entity.position[0] - this.entities[0].position[0], entity.position[1] - this.entities[0].position[1]).getAbs() < 24) {
+            this.interaction = i
+            this.tip = 'Press Q to interact with ' + entity.name
+          }
+          this.drawCompanion.renderedEntities++
+        }
+        i--
       }, null)
+      //Structures
       this.ctx.drawImage(
         MapStore.structuresTop,
         x,
