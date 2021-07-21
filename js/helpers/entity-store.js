@@ -1,4 +1,5 @@
-import DialogView from '../helpers/dialog-view.js'
+import DialogView from './dialog-view.js'
+import CoordinateHelper from './coordinates.js'
 import Entity from '../classes/entity.js'
 import { CharacterCompanion, Character } from '../classes/character.js'
 
@@ -64,12 +65,17 @@ export default {
       }, [3110, 3450]))
       this.entities[9].interaction = () => DialogView.show('Narrator', 'That looks like a pretty cool sword!')
 
-      this.entities.push(new Character('Entity Test', {
-        idle: ['narrator.png']
-      }, [3090, 3595]))
-      this.entities[10].interaction = () => DialogView.show('Entity Test', '*%$#*%$#*%$#!')
-      this.entities[10].speed = CharacterCompanion.WALKING_SPEED_SLOW
-      this.entities[10].generateRandomPath(8)
+      for (let i = 10; i < 20; i++) {
+        this.entities.push(new Character('Villager', {
+          idle: ['villager/0.png'],
+          left: ['villager/down0.png', 'villager/down1.png'],
+          right: ['villager/down0.png', 'villager/down1.png'],
+          up: ['villager/up0.png', 'villager/up1.png'],
+          down: ['villager/down0.png', 'villager/down1.png']
+        }, CoordinateHelper.randomPositionNearby([3090, 3595], 200)))
+        this.entities[i].speed = CharacterCompanion.WALKING_SPEED_SLOW
+        this.entities[i].generateRandomPath(8)
+      }
 
       this.loaded = true
     }

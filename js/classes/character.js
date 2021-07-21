@@ -1,5 +1,6 @@
 import Entity from './entity.js'
 import Vector from './vector.js'
+import CoordinateHelper from '../helpers/coordinates.js'
 
 import MapStore from '../helpers/map-store.js'
 import DialogView from '../helpers/dialog-view.js'
@@ -63,21 +64,8 @@ class Character extends Entity {
     const waypoints = []
     let lastPoint = this.position
 
-    const randomOffset = () => {
-      const number = Math.floor(Math.random() * 51)
-      if (Math.random() < .5) return number
-      else return -number
-    }
-    const randomPosition = () => {
-      const point = [lastPoint[0] + randomOffset(), lastPoint[1] + randomOffset()]
-      if (MapStore.offsceen.ctx.getImageData(point[0], point[1], 1, 1).data[0] > 0)
-        return randomPosition()
-      else
-        return point
-    }
-
     for (let i = 0; i < amount / 2 - 1; i++) {
-      const point = randomPosition()
+      const point = CoordinateHelper.randomPositionNearby(lastPoint, 50)
       waypoints.push(point)
       lastPoint = point
     }

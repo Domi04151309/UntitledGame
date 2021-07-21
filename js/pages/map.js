@@ -181,8 +181,7 @@ export default {
       const y = -this.entities[0].position[1] * this.scale + (window.innerHeight + this.scale * ENTITY_SIZE) / 2
       this.ctx.imageSmoothingEnabled = false
       this.ctx.fillStyle = '#1C50F1'
-      if (window.settings.graphics == 'medium' || window.settings.graphics == 'high') this.ctx.filter = 'brightness(90%)'
-      //this.ctx.filter = 'brightness(25%) sepia(50%)'
+      if (window.settings.graphics == 'medium' || window.settings.graphics == 'high') this.ctx.filter = 'saturate(.8) brightness(.9)'
       this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
       this.ctx.drawImage(
         MapStore.default,
