@@ -60,7 +60,7 @@ class Character extends Entity {
   addToWalkPath(...waypoints) {
     waypoints.forEach(waypoint => this.waypoints.push(waypoint))
   }
-  generateRandomPath(amount) {
+  async generateRandomPath(amount) {
     const waypoints = []
     let lastPoint = this.position
 
@@ -74,15 +74,14 @@ class Character extends Entity {
   followPath() {
     if (this.waypoints.length == 0) return
 
-    const distance = this.position[0] - this.waypoints[this.routeIndex][0] + this.position[1] - this.waypoints[this.routeIndex][1]
-    if (distance >= -2 && distance <= 2) {
+    const vector = new Vector(this.waypoints[this.routeIndex][0] - this.position[0], this.waypoints[this.routeIndex][1] - this.position[1])
+    if (vector.getAbs() <= 1) {
       if (this.waypoints.length > this.routeIndex + 1) this.routeIndex++
       else this.routeIndex = 0
+    } else {
+      this.movement = new Int8Array(vector.normalize().toArray().map(x => Math.round(x)))
+      this.move()
     }
-
-    const vector = new Vector(this.waypoints[this.routeIndex][0] - this.position[0], this.waypoints[this.routeIndex][1] - this.position[1])
-    this.movement = vector.normalize().toArray().map(x => Math.round(x))
-    this.move(MapStore.offsceen.ctx)
   }
 }
 

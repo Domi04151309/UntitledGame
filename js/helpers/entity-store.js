@@ -22,9 +22,9 @@ export default {
         right: ['bruno/down0.png', 'bruno/down1.png'],
         up: ['bruno/up0.png', 'bruno/up1.png'],
         down: ['bruno/down0.png', 'bruno/down1.png']
-      }, [3100, 3450]))
+      }, [3090, 3425]))
       this.entities[1].speed = CharacterCompanion.WALKING_SPEED_SLOW
-      this.entities[1].addToWalkPath([2935, 3460], [2935, 3760], [3180, 3745], [3170, 3620], [3060, 3550], [3100, 3450])
+      this.entities[1].addToWalkPath([3045, 3500], [2975, 3465], [3050, 3465], [3090, 3425])
       this.entities[1].interaction = () => DialogView.show(this.entities[1].name, 'Hi Steve! Nice to meet you!')
 
       this.entities.push(new Character('Pollux', {
@@ -65,7 +65,17 @@ export default {
       }, [3110, 3450]))
       this.entities[9].interaction = () => DialogView.show('Narrator', 'That looks like a pretty cool sword!')
 
-      for (let i = 10; i < 30; i++) {
+      this.entities.push(new Character('Knight', {
+        idle: ['knight/0.png'],
+        left: ['knight/down0.png', 'knight/down1.png'],
+        right: ['knight/down0.png', 'knight/down1.png'],
+        up: ['knight/up0.png', 'knight/up1.png'],
+        down: ['knight/down0.png', 'knight/down1.png']
+      }, [3100, 3450]))
+      this.entities[10].speed = CharacterCompanion.WALKING_SPEED_SLOW
+      this.entities[10].addToWalkPath([2935, 3460], [2935, 3760], [3180, 3745], [3170, 3620], [3060, 3550], [3100, 3450])
+
+      for (let i = 11; i < 30; i++) {
         this.entities.push(new Character('Villager', {
           idle: ['villager/0.png'],
           left: ['villager/down0.png', 'villager/down1.png'],
