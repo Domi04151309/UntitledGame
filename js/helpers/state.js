@@ -26,6 +26,9 @@ export default {
       case 'weapons':
         key = 'weapons'
         break
+      case 'magic':
+        key = 'magic'
+        break
       default:
         key = 'default'
         break

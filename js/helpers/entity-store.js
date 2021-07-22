@@ -51,15 +51,6 @@ export default {
         idle: ['skello/0.png']
       }, [3210, 3650]))
 
-      this.entities.push(new Entity('Bruno\'s bakery', {
-        idle: ['locations/bruno.png']
-      }, [3095, 3410]))
-      this.entities[7].interaction = () => context.$router.push('/d/bakery')
-      this.entities.push(new Entity('the weapon shop', {
-        idle: ['locations/weapons.png']
-      }, [3110, 3500]))
-      this.entities[8].interaction = () => context.$router.push('/d/weapons')
-
       this.entities.push(new Character('Knight', {
         idle: ['knight/0.png'],
         left: ['knight/down0.png', 'knight/down1.png'],
@@ -67,13 +58,30 @@ export default {
         up: ['knight/up0.png', 'knight/up1.png'],
         down: ['knight/down0.png', 'knight/down1.png']
       }, [3100, 3450]))
-      this.entities[9].speed = CharacterCompanion.WALKING_SPEED_SLOW
-      this.entities[9].addToWalkPath([2935, 3460], [2935, 3760], [3180, 3745], [3170, 3620], [3060, 3550], [3100, 3450])
+      this.entities[7].speed = CharacterCompanion.WALKING_SPEED_SLOW
+      this.entities[7].addToWalkPath([2935, 3460], [2935, 3760], [3180, 3745], [3170, 3620], [3060, 3550], [3100, 3450])
+
+      this.entities.push(new Entity('Bruno\'s bakery', {
+        idle: ['locations/bruno.png']
+      }, [3095, 3410]))
+      this.entities[8].interaction = () => context.$router.push('/d/bakery')
+      this.entities.push(new Entity('the weapon shop', {
+        idle: ['locations/weapons.png']
+      }, [3110, 3500]))
+      this.entities[9].interaction = () => context.$router.push('/d/weapons')
+      this.entities.push(new Entity('the magic shop', {
+        idle: ['locations/magic.png']
+      }, [2930, 3520]))
+      this.entities[10].interaction = () => context.$router.push('/d/magic')
+      this.entities.push(new Entity('your home', {
+        idle: ['locations/home.png']
+      }, [3010, 3435]))
+      this.entities[11].interaction = () => DialogView.show('Narrator', 'Home Sweet Home')
 
       this.entities.push(new Entity('the sword', {
         idle: ['items/sword1.png', 'items/sword2.png']
       }, [3110, 3450]))
-      this.entities[10].interaction = () => DialogView.show('Narrator', 'That looks like a pretty cool sword! Sadly, you cannot pick it up yet because the game is incomplete!')
+      this.entities[12].interaction = () => DialogView.show('Narrator', 'That looks like a pretty cool sword! Sadly, you cannot pick it up yet because the game is incomplete!')
 
       for (let i = this.entities.length; i < 30; i++) {
         this.entities.push(new Character('Villager', {

@@ -20,6 +20,11 @@ const people = {
     name: 'Elijah',
     texture: './images/elijah/0.png',
     color: 'deep-purple'
+  },
+  helena: {
+    name: 'Helena',
+    texture: './images/helena/0.png',
+    color: 'deep-purple'
   }
 }
 
@@ -94,6 +99,17 @@ export default {
       ['Sadly, I don\'t.', people.elijah],
       ['Alright, see you later!', people.steve],
       ['Bye!', people.elijah]
+    ],
+    onFinish: () => {}
+  },
+  magic: {
+    character: [people.steve, people.helena],
+    speech: [
+      ['Hey Steve! Nice to meet you!', people.helena],
+      ['Hi Helena! Do you have any new potions?', people.steve],
+      ['Sadly, I don\'t.', people.helena],
+      ['Alright, see you later!', people.steve],
+      ['Bye!', people.helena]
     ],
     onFinish: () => {}
   }
