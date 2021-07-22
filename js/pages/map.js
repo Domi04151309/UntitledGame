@@ -6,6 +6,7 @@ import Stats from '../components/stats.js'
 import Tutorial from '../components/tutorial.js'
 import POverlay from '../components/p-overlay.js'
 
+import StateHelper from '../helpers/state.js'
 import SaveState from '../helpers/save-state.js'
 import MapStore from '../helpers/map-store.js'
 import EntityStore from '../helpers/entity-store.js'
@@ -39,6 +40,9 @@ export default {
       }
     }
   },
+  computed: {
+    StateHelper: () => StateHelper
+  },
   template:
   `<div>
     <Menu v-on:paused="onPaused()"></Menu>
@@ -48,7 +52,7 @@ export default {
       <Stats class="right" :entity="interaction != 0 ? entities[interaction] : null"></Stats>
       <div class="quest">
         <h2>Quest</h2>
-        <p>Explore the world!</p>
+        <p>{{ StateHelper.getQuest() }}</p>
       </div>
       <Tutorial></Tutorial>
       <POverlay :data="{ i: counters.oneFourth?.count, fps: drawCompanion.fps, scale: scale, entities: [drawCompanion.renderedEntities, entities.length], position: entities[0]?.position, movement: entities[0]?.movement }"></POverlay>

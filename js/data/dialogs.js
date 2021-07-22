@@ -49,11 +49,31 @@ export default {
       ['Why would I do that?', people.steve],
       ['You can get one of my famous super cupcakes for free every day?', people.bruno],
       ['Sounds like a deal to me.', people.steve],
-      ['Great, thanks a lot! Meet me outside the city wall later!', people.bruno],
+      ['Great, thanks a lot! Meet me outside later!', people.bruno],
       ['Alright, see you later!', people.steve],
       ['Bye!', people.bruno]
     ],
     onFinish: () => StateHelper.state++
+  },
+  introOutside: {
+    character: [people.steve, people.bruno],
+    speech: [
+      ['Hey Steve! You have to learn about weapons first before continuing your adventure!', people.bruno],
+      ['Hi Bruno. Tell me more about weapons.', people.steve],
+      ['You have to be able to defeat yourself against the bad guys! Pick up the sword in the city center in case you haven\'t already done so!', people.bruno],
+      ['Great! That sounds like a plan!', people.steve],
+      ['Alright, see you later!', people.steve],
+      ['Bye!', people.bruno]
+    ],
+    onFinish: () => StateHelper.state++
+  },
+  bruno: {
+    character: [people.steve, people.bruno],
+    speech: [
+      ['Hey Steve! Nice to meet you!', people.bruno],
+      ['Hi Bruno.', people.steve]
+    ],
+    onFinish: () => {}
   },
   bakery: {
     character: [people.steve, people.bruno],
