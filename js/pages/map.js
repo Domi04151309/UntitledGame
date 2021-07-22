@@ -134,12 +134,20 @@ export default {
       this.counters.two = new Counter(ESTIMATED_FRAMERATE * 2)
       this.counters.five = new Counter(ESTIMATED_FRAMERATE * 5)
 
+      console.time('map')
       await MapStore.load()
+      console.timeEnd('map')
+      console.time('entites')
       EntityStore.load(this)
+      console.timeEnd('entites')
+      console.time('state')
       SaveState.load(this)
+      console.timeEnd('state')
+      console.time('sprites')
       for (const entity of this.entities) {
         await entity.loadSprites()
       }
+      console.timeEnd('sprites')
 
       if (this.drawCompanion.running) requestAnimationFrame(this.draw)
     },

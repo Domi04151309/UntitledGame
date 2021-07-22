@@ -60,7 +60,7 @@ class Character extends Entity {
   addToWalkPath(...waypoints) {
     waypoints.forEach(waypoint => this.waypoints.push(waypoint))
   }
-  async generateRandomPath(amount) {
+  generateRandomPath(amount) {
     const waypoints = []
     let lastPoint = this.position
 

@@ -19,11 +19,7 @@ export default class Entity {
   }
   async loadSprites() {
     if (!this.sprites.loaded) {
-      for (const category in this.spriteInfo) {
-        for (const sprite of this.spriteInfo[category]) {
-          this.sprites[category].push(await ImageHelper.loadImage(sprite))
-        }
-      }
+      this.sprites = await ImageHelper.loadImages(this.spriteInfo)
       this.updateSprite()
       this.sprites.loaded = true
     }
