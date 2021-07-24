@@ -46,7 +46,7 @@ export default {
   template:
   `<div>
     <Menu v-on:paused="onPaused()"></Menu>
-    <Inventory></Inventory>
+    <Inventory :entity="entities[0]"></Inventory>
     <main class="full-height">
       <Stats :entity="entities[0]"></Stats>
       <Stats class="right" :entity="interaction != 0 ? entities[interaction] : null"></Stats>

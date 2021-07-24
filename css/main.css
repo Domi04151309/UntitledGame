@@ -455,6 +455,8 @@ pre {
   gap: 16px;
 }
 .inventory-grid > div {
+  position: relative;
+  overflow: visible;
   aspect-ratio: 1 / 1;
   cursor: pointer;
 }
@@ -463,6 +465,31 @@ pre {
 }
 .inventory-grid > div:active {
   filter: brightness(.8);
+}
+.inventory-grid > div > img {
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  width: 100%;
+  height: 100%;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+.inventory-grid > div > .tooltip {
+  visibility: hidden;
+  position: absolute;
+  width: 72px;
+  top: 65%;
+  left: 50%;
+  margin-left: -36px;
+  text-align: center;
+  padding: 4px 0;
+  background-color: var(--pressed-color);
+  border-radius: var(--border-radius-1x);
+  z-index: 800;
+}
+.inventory-grid > div:hover > .tooltip {
+  visibility: visible;
 }
 
 /* game elements */

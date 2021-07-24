@@ -19,7 +19,8 @@ class Character extends Entity {
     this.data = {
       health: 100,
       energy: 75,
-      terror: 0
+      terror: 0,
+      inventory: []
     }
 
     this.randomOffset = 0

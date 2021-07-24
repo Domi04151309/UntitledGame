@@ -1,5 +1,6 @@
 import DialogView from './dialog-view.js'
 import CoordinateHelper from './coordinates.js'
+import StateHelper from './state.js'
 import Entity from '../classes/entity.js'
 import { CharacterCompanion, Character } from '../classes/character.js'
 
@@ -81,7 +82,18 @@ export default {
       this.entities.push(new Entity('the sword', {
         idle: ['items/sword1.png', 'items/sword2.png']
       }, [3110, 3450]))
-      this.entities[12].interaction = () => DialogView.show('Narrator', 'That looks like a pretty cool sword! Sadly, you cannot pick it up yet because the game is incomplete!')
+      this.entities[12].interaction = () => {
+        if (context.entities[0].data.inventory.length < 40) {
+          context.entities[0].data.inventory.push({
+            name: 'Sword',
+            texture: 'items/sword0.png'
+          })
+          DialogView.show('Narrator', 'That looks like a pretty cool sword! You picked it up!')
+          if (StateHelper.state == 2) StateHelper.state++
+        } else {
+          DialogView.show('Narrator', 'That looks like a pretty cool sword! Sadly, your inventory is full!')
+        }
+      }
 
       for (let i = this.entities.length; i < 30; i++) {
         this.entities.push(new Character('Villager', {
