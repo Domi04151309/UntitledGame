@@ -20,8 +20,7 @@ export default {
         break
       case 'bakery':
         if (this.state == 0) key = 'intro'
-        else if (this.state == 1) key = 'bakery'
-        else key = 'default'
+        else key = 'bakery'
         break
       case 'weapons':
         key = 'weapons'
