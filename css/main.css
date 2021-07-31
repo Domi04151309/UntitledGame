@@ -491,6 +491,15 @@ pre {
 .inventory-grid > div:hover > .tooltip {
   visibility: visible;
 }
+img.inventory-selected {
+  width: 192px;
+  height: 192px;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+div.inventory-selected {
+  align-self: center;
+}
 
 /* game elements */
 canvas {

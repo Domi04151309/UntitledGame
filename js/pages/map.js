@@ -33,6 +33,7 @@ export default {
       },
       drawCompanion: {
         running: true,
+        busy: false,
         lastCalled: 0,
         fps: 0,
         frameCounter: 0,
@@ -46,7 +47,7 @@ export default {
   template:
   `<div>
     <Menu v-on:paused="onPaused()"></Menu>
-    <Inventory :entity="entities[0]"></Inventory>
+    <Inventory v-on:busy="drawCompanion.busy = !drawCompanion.busy" :entity="entities[0]"></Inventory>
     <main class="full-height">
       <Stats :entity="entities[0]"></Stats>
       <Stats class="right" :entity="interaction != 0 ? entities[interaction] : null"></Stats>
@@ -77,7 +78,7 @@ export default {
       }
     },
     onKeyDown(event) {
-      if (this.drawCompanion.running) {
+      if (this.drawCompanion.running && !this.drawCompanion.busy) {
         if (event.keyCode == 87 && this.entities[0].movement[1] != -1) {
           this.entities[0].movement[1] = -1
           this.counters.oneFourth.reset()
@@ -98,7 +99,7 @@ export default {
       }
     },
     onKeyUp(event) {
-      if (this.drawCompanion.running) {
+      if (this.drawCompanion.running && !this.drawCompanion.busy) {
         if (event.keyCode == 87 || event.keyCode == 83) {
           this.entities[0].movement[1] = 0
           this.counters.two.reset()
@@ -109,7 +110,7 @@ export default {
       }
     },
     onWheel(event) {
-      if (this.drawCompanion.running) {
+      if (this.drawCompanion.running && !this.drawCompanion.busy) {
         if (event.deltaY > 0 && this.scale > 2) this.scale -= 1
         else if (event.deltaY < 0 && this.scale < 20) this.scale += 1
       }
