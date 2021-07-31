@@ -25,7 +25,7 @@ export default class Entity {
     }
   }
   updateSprite(category = 'idle') {
-    if (this.sprites[category].length == 0) return
+    if (this.sprites[category] == null || this.sprites[category]?.length == 0) return
     if (this.sprites.i + 1 < this.sprites[category].length) this.sprites.i++
     else this.sprites.i = 0
     this.sprites.selected = this.sprites[category][this.sprites.i]

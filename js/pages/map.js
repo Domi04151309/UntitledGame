@@ -56,7 +56,7 @@ export default {
         <p>{{ StateHelper.getQuest() }}</p>
       </div>
       <Tutorial></Tutorial>
-      <POverlay :data="{ i: counters.oneFourth?.count, fps: drawCompanion.fps, scale: scale, entities: [drawCompanion.renderedEntities, entities.length], position: entities[0]?.position, movement: entities[0]?.movement }"></POverlay>
+      <POverlay :data="{ i: counters.oneFourth?.count, fps: drawCompanion.fps, scale: scale, entities: [drawCompanion.renderedEntities, entities.length], position: entities[0]?.position, movement: entities[0]?.movement, interaction: interaction }"></POverlay>
       <p class="tip">{{ tip }}</p>
       <canvas ref="canvas"></canvas>
     </main>
@@ -167,6 +167,7 @@ export default {
         this.entities.forEach(entity => {
           if (entity instanceof Character) entity.chooseMatchingSprite()
         })
+        this.entities[5].waypoints[0] = (this.entities[0].position)
       }
       if (this.counters.two.increment() == 1) {
         this.entities.forEach(entity => entity.updateIdleSprite())
