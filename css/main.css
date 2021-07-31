@@ -509,7 +509,12 @@ canvas {
   cursor: crosshair;
 }
 .full-height {
-  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
 }
 .stats, .tutorial, .quest, .p-overlay, .tip {
   display: inline-block;
