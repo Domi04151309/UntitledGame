@@ -8,6 +8,7 @@ export default {
     switch (this.state) {
       case 1: return 'Talk to Bruno!'
       case 2: return 'Pick up the sword!'
+      case 3: return 'Talk to Bruno!'
       default: return 'Explore the world!'
     }
   },
@@ -16,6 +17,7 @@ export default {
     switch (location) {
       case 'bruno':
         if (this.state == 1) key = 'introOutside'
+        else if (this.state == 3) key = 'introOutside2'
         else key = 'bruno'
         break
       case 'bakery':

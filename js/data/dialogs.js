@@ -1,4 +1,5 @@
 import StateHelper from '../helpers/state.js'
+import SaveState from '../helpers/save-state.js'
 
 const people = {
   narrator: {
@@ -71,6 +72,24 @@ export default {
       ['Bye!', people.bruno]
     ],
     onFinish: () => StateHelper.state++
+  },
+  introOutside2: {
+    character: [people.steve, people.bruno],
+    speech: [
+      ['Hi Bruno. I have picked up the sword outside.', people.steve],
+      ['Hey Steve! That\'s great! Now you\'re really ready to go on your mission!', people.bruno],
+      ['I will show the governor what his people think about his tyranny!', people.steve],
+      ['Wait! Here take a health potion before you go!', people.bruno],
+      ['Thanks, see you later!', people.steve],
+      ['Bye!', people.bruno]
+    ],
+    onFinish: () => {
+      SaveState.addToInventory({
+        name: 'Health Potion',
+        texture: 'items/potion_health.png'
+      })
+      StateHelper.state++
+    }
   },
   bruno: {
     character: [people.steve, people.bruno],

@@ -448,6 +448,9 @@ pre {
 .inventory {
   max-width: 720px;
 }
+.inventory .card {
+  overflow: visible;
+}
 .inventory-grid {
   display: grid;
   grid-template-columns: repeat(10, 10fr);
@@ -456,7 +459,6 @@ pre {
 }
 .inventory-grid > div {
   position: relative;
-  overflow: visible;
   aspect-ratio: 1 / 1;
   cursor: pointer;
 }
