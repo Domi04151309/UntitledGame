@@ -6,8 +6,11 @@ export default {
   name: 'dialog',
   data() {
     return {
+      opened: true,
       dialog: {},
-      index: 0
+      dialogIndex: 0,
+      text: '',
+      textIndex: 0
     }
   },
   template:
@@ -21,8 +24,8 @@ export default {
       <img class="dialog-character right" :src="dialog.character[1].texture">
       <div class="dialog-box-container">
         <div class="card dialog-box">
-          <p :class="'m-0 accent-text ' + dialog.speech[index][1].color">{{ dialog.speech[index][1].name }}</p>
-          <p class="m-0">{{ dialog.speech[index][0] }}</p>
+          <p :class="'m-0 accent-text ' + dialog.speech[dialogIndex][1].color">{{ dialog.speech[dialogIndex][1].name }}</p>
+          <p class="m-0">{{ text }}</p>
         </div>
       </div>
     </main>
@@ -35,12 +38,28 @@ export default {
       if (event.keyCode == 13) this.next()
       else if (event.keyCode == 8) this.prev()
     },
+    startTypeWriter() {
+      if (this.textIndex < this.dialog.speech[this.dialogIndex][0].length) {
+        this.text += this.dialog.speech[this.dialogIndex][0].charAt(this.textIndex)
+        this.textIndex++
+      }
+      if (this.opened) setTimeout(this.startTypeWriter, 50)
+    },
+    resetTypewriter() {
+      this.textIndex = 0
+      this.text = ''
+    },
     prev() {
-      if (this.index > 0) this.index--
+      if (this.dialogIndex > 0) {
+        this.dialogIndex--
+        this.resetTypewriter()
+      }
     },
     next() {
-      if (this.dialog.speech.length > this.index + 1) this.index++
-      else {
+      if (this.dialog.speech.length > this.dialogIndex + 1) {
+        this.dialogIndex++
+        this.resetTypewriter()
+      } else {
         this.dialog.onFinish()
         this.$router.push('/m')
       }
@@ -49,8 +68,10 @@ export default {
   created() {
     this.dialog = StateHelper.getDialogFromState(this.$route.params.location)
     document.addEventListener('keydown', this.onKeyDown)
+    this.startTypeWriter()
   },
   beforeDestroy() {
+    this.opened = false
     document.removeEventListener('keydown', this.onKeyDown)
   }
 }
