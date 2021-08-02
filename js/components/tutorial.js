@@ -6,6 +6,8 @@ export default {
       index: 0,
       text: [
         'Use WASD to move',
+        'Press SPACE to sprint',
+        'Press SHIFT to sneak',
         'Press E to open your inventory',
         'Press M to pause the game'
       ]
@@ -19,10 +21,12 @@ export default {
     onKeyDown(event) {
       if (
         (this.index == 0 && (event.keyCode == 87 || event.keyCode == 65 || event.keyCode == 83 || event.keyCode == 68))
-        || (this.index == 1 && event.keyCode == 69)
+        || (this.index == 1 && event.keyCode == 32)
+        || (this.index == 2 && event.keyCode == 16)
+        || (this.index == 3 && event.keyCode == 69)
       ) {
         this.index++
-      } else if (this.index == 2 && event.keyCode == 77) {
+      } else if (this.index == 4 && event.keyCode == 77) {
         this.index++
         this.shown = false
         document.removeEventListener('keydown', this.onKeyDown)
