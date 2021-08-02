@@ -143,7 +143,7 @@ select, input, textarea {
   color: var(--text-color);
   border-radius: var(--border-radius-1x);
 }
-.card .card, .card select, .card input, .card textarea {
+.card:not(.modal-content) .card:not(.modal-content), .card:not(.modal-content) select, .card:not(.modal-content) input, .card:not(.modal-content) textarea, .achievement {
   background: var(--elevation-overlay-2);
 }
 textarea {
@@ -552,7 +552,8 @@ canvas {
 }
 .tutorial {
   top: 0;
-  right: 0;
+  left: 50%;
+  transform: translateX(-50%);
   padding: 8px 16px;
   font-size: 14px;
   color: var(--text-color-secondary);
@@ -579,10 +580,53 @@ canvas {
   font-size: 1.5em;
 }
 
+/* modal */
+.modal-background, .modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 100;
+}
+.modal-background {
+  background: rgba(0, 0, 0, .5);
+  z-index: 100;
+}
+.modal-content {
+  position: absolute;
+  width: 90%;
+  max-width: 480px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--window-background);
+  padding: 16px;
+  z-index: 150;
+  animation: fadeInModal .5s;
+}
+.modal-content > h2 {
+  margin: 0 0 16px;
+}
+.modal-content > .button-bar {
+  margin-top: 16px;
+  text-align: right;
+}
+.modal-content > .button-bar > button {
+  margin: -8px 0;
+  padding: 8px;
+}
+
 /* animation */
 @keyframes fadeIn {
   0%{
     opacity: 0;
+  }
+}
+@keyframes fadeInModal {
+  0%{
+    opacity: 0;
+    transform: translate(-50%, calc(16px - 50%));
   }
 }
 
