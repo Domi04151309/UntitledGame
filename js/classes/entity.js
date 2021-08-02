@@ -16,6 +16,7 @@ export default class Entity {
     }
     this.position = new Float32Array(position)
     this.interaction = () => DialogView.show('Narrator', this.name + ' did not move...')
+    this.proximityAction = () => {}
   }
   async loadSprites() {
     if (!this.sprites.loaded) {

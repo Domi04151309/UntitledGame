@@ -26,6 +26,11 @@ const people = {
     name: 'Helena',
     texture: './images/helena/0.png',
     color: 'deep-purple'
+  },
+  skello: {
+    name: 'Skello',
+    texture: './images/skello/0.png',
+    color: 'deep-purple'
   }
 }
 
@@ -131,5 +136,19 @@ export default {
       ['Bye!', people.helena]
     ],
     onFinish: () => {}
+  },
+  skello: {
+    character: [people.steve, people.skello],
+    speech: [
+      ['Hello Bello, I\'m the Skello!', people.skello],
+      ['BOO!', people.skello],
+      ['AHHHH!', people.steve]
+    ],
+    onFinish: () => {
+      const context = SaveState.newContext()
+      SaveState.load(context)
+      context.entities[0].data.health -= 5
+      SaveState.save(context)
+    }
   }
 }

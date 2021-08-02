@@ -1,6 +1,11 @@
 import JsonHelper from '../helpers/json.js'
 
 export default {
+  newContext() {
+    return {
+      entities: [{ position: [], data: {} }]
+    }
+  },
   save(context) {
     JsonHelper.set('characterData', {
       position: Array.from(context.entities[0].position),
@@ -15,9 +20,7 @@ export default {
     }
   },
   addToInventory(item) {
-    const context = {
-      entities: [{ position: [], data: {} }]
-    }
+    const context = this.newContext()
     this.load(context)
     if (context.entities[0].data.inventory.length < 40) context.entities[0].data.inventory.push(item)
     this.save(context)

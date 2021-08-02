@@ -20,6 +20,9 @@ export default {
         else if (this.state == 3) key = 'introOutside2'
         else key = 'bruno'
         break
+      case 'skello':
+        key = 'skello'
+        break
       case 'bakery':
         if (this.state == 0) key = 'intro'
         else key = 'bakery'

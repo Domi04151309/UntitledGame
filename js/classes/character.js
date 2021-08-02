@@ -79,6 +79,7 @@ class Character extends Entity {
     if (vector.getAbs() <= 1) {
       if (this.waypoints.length > this.routeIndex + 1) this.routeIndex++
       else this.routeIndex = 0
+      this.proximityAction()
     } else {
       this.movement = new Int8Array(vector.normalize().toArray().map(x => Math.round(x)))
       this.move()
