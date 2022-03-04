@@ -1,4 +1,4 @@
-import JsonHelper from '../helpers/json.js'
+import JsonHelper from './json.js'
 
 export default {
   newContext() {

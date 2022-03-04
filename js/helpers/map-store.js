@@ -1,4 +1,4 @@
-import ImageHelper from '../helpers/image.js'
+import ImageHelper from './image.js'
 
 export default {
   loaded: false,

@@ -1,4 +1,4 @@
-import MapStore from '../helpers/map-store.js'
+import MapStore from './map-store.js'
 
 export default {
   randomOffset(radius) {

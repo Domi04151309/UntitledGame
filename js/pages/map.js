@@ -9,6 +9,7 @@ import POverlay from '../components/p-overlay.js'
 import StateHelper from '../helpers/state.js'
 import SaveState from '../helpers/save-state.js'
 import MapStore from '../helpers/map-store.js'
+import ParticleStore from '../helpers/particle-store.js'
 import EntityStore from '../helpers/entity-store.js'
 import Counter from '../classes/counter.js'
 import Vector from '../classes/vector.js'
@@ -79,7 +80,8 @@ export default {
       }
     },
     onClick() {
-      //TODO: draw effects
+      this.particles = []
+      this.particles.push(...ParticleStore.attack)
       this.entities.forEach((item, i) => {
         if (i != 0) {
           const vector = new Vector(item.position[0] - this.entities[0].position[0], item.position[1] - this.entities[0].position[1])
@@ -153,6 +155,9 @@ export default {
       console.time('entites')
       EntityStore.load(this)
       console.timeEnd('entites')
+      console.time('particles')
+      await ParticleStore.load()
+      console.timeEnd('particles')
       console.time('state')
       SaveState.load(this)
       console.timeEnd('state')
@@ -258,15 +263,13 @@ export default {
       this.ctx.shadowBlur = 0
 
       //Particles
-      //TODO: fix position
-      //TODO: actually draw particles
       if (this.particles.length != 0) {
         this.ctx.drawImage(
           this.particles.shift(),
-          x,
-          y,
-          this.scale * MapStore.default.width,
-          this.scale * MapStore.default.height
+          (window.innerWidth  - this.scale * ParticleStore.size) / 2,
+          (window.innerHeight - this.scale * ParticleStore.size) / 2,
+          this.scale * ParticleStore.size,
+          this.scale * ParticleStore.size
         )
       }
 
