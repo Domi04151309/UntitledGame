@@ -23,6 +23,7 @@ export default {
     return {
       ctx: null,
       entities: [],
+      particles: [],
       scale: 5,
       interaction: 0,
       tip: '',
@@ -48,7 +49,7 @@ export default {
   `<div>
     <Menu v-on:paused="onPaused()"></Menu>
     <Inventory v-on:busy="drawCompanion.busy = !drawCompanion.busy" :entity="entities[0]"></Inventory>
-    <main class="full-height">
+    <main class="full-height" v-on:click="onClick()">
       <Stats :entity="entities[0]"></Stats>
       <Stats class="right" :entity="interaction != 0 ? entities[interaction] : null"></Stats>
       <div class="quest">
@@ -76,6 +77,17 @@ export default {
         this.drawCompanion.running = true
         requestAnimationFrame(this.draw)
       }
+    },
+    onClick() {
+      //TODO: draw effects
+      this.entities.forEach((item, i) => {
+        if (i != 0) {
+          const vector = new Vector(item.position[0] - this.entities[0].position[0], item.position[1] - this.entities[0].position[1])
+          if (item instanceof Character && vector.getAbs() <= 24) {
+            this.entities[0].attack(item, vector)
+          }
+        }
+      })
     },
     onKeyDown(event) {
       if (this.drawCompanion.running && !this.drawCompanion.busy) {
@@ -167,6 +179,7 @@ export default {
         this.entities.forEach(entity => {
           if (entity instanceof Character) entity.chooseMatchingSprite()
         })
+        // Pathfinding
         this.entities[5].waypoints[0] = (this.entities[0].position)
       }
       if (this.counters.two.increment() == 1) {
@@ -243,6 +256,19 @@ export default {
         this.scale * MapStore.default.height
       )
       this.ctx.shadowBlur = 0
+
+      //Particles
+      //TODO: fix position
+      //TODO: actually draw particles
+      if (this.particles.length != 0) {
+        this.ctx.drawImage(
+          this.particles.shift(),
+          x,
+          y,
+          this.scale * MapStore.default.width,
+          this.scale * MapStore.default.height
+        )
+      }
 
       if (this.drawCompanion.running) requestAnimationFrame(this.draw)
     }

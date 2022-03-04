@@ -23,11 +23,20 @@ class Character extends Entity {
       inventory: []
     }
 
+    this.attackDamage = 5
     this.randomOffset = 0
     this.movement = new Int8Array([0, 0])
     this.speed = CharacterCompanion.WALKING_SPEED_NORMAL
     this.routeIndex = 0
     this.waypoints = []
+  }
+  attack(entity, vector) {
+    entity.data.health -= Math.round(this.data.energy / 100 * this.attackDamage)
+    const knockback = vector.normalize().multiply(4).toArray()
+    entity.position[0] += knockback[0]
+    entity.position[1] += knockback[1]
+    this.data.terror++
+    this.data.energy--
   }
   updateIdleSprite() {
     if (this.sprites['idle'].length == 0 || this.movement[0] != 0 || this.movement[1] != 0) return

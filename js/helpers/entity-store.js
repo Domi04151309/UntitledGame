@@ -100,7 +100,7 @@ export default {
         }
       }
 
-      for (let i = this.entities.length; i < 30; i++) {
+      for (let i = 0; i < 10; i++) {
         this.entities.push(new Character('Villager', {
           idle: ['villager/0.png'],
           left: ['villager/down0.png', 'villager/down1.png'],
@@ -108,8 +108,8 @@ export default {
           up: ['villager/up0.png', 'villager/up1.png'],
           down: ['villager/down0.png', 'villager/down1.png']
         }, CoordinateHelper.randomPositionNearby([3090, 3595], 200)))
-        this.entities[i].speed = CharacterCompanion.WALKING_SPEED_SLOW
-        this.entities[i].generateRandomPath(8)
+        this.entities[this.entities.length - 1].speed = CharacterCompanion.WALKING_SPEED_SLOW
+        this.entities[this.entities.length - 1].generateRandomPath(8)
       }
 
       this.loaded = true
