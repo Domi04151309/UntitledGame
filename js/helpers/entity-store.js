@@ -51,6 +51,7 @@ export default {
       this.entities.push(new Character('Skello', {
         idle: ['skello/0.png']
       }, [3210, 3650]))
+      this.entities[5].speed = CharacterCompanion.WALKING_SPEED_SLOW
       this.entities[5].proximityAction = () => {
         this.entities[5].position = new Float32Array([3230, 3610])
         context.$router.push('/d/skello')

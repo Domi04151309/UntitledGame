@@ -30,9 +30,9 @@ export default {
     </div>
     <div v-show="selected != null" class="screen-center-container inventory-container" v-on:click="if ($event.path.length == 8) selected = null">
       <div class="screen-center inventory card p-16 flex space">
-        <img class="card inventory-selected" :src="selected ? './images/' + inventory[selected]?.texture : ''" :alt="selected ? inventory[selected]?.name : ''"></img>
+        <img class="card inventory-selected" :src="selected != null ? './images/' + inventory[selected]?.texture : ''" :alt="selected != null ? inventory[selected]?.name : ''"></img>
         <div class="inventory-selected">
-          <h2 class="mt-0">{{ selected ? inventory[selected]?.name : '' }}</h2>
+          <h2 class="mt-0">{{ selected != null ? inventory[selected]?.name : '' }}</h2>
           <p class="mb-0">Press Q to scrap</p>
         </div>
       </div>
