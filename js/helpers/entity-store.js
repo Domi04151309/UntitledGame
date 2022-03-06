@@ -2,6 +2,7 @@ import DialogView from './dialog-view.js'
 import CoordinateHelper from './coordinates.js'
 import StateHelper from './state.js'
 import Entity from '../classes/entity.js'
+import Item from '../classes/item.js'
 import { CharacterCompanion, Character } from '../classes/character.js'
 
 export default {
@@ -89,10 +90,7 @@ export default {
       }, [3110, 3450]))
       this.entities[12].interaction = () => {
         if (context.entities[0].data.inventory.length < 40) {
-          context.entities[0].data.inventory.push({
-            name: 'Sword',
-            texture: 'items/sword0.png'
-          })
+          context.entities[0].data.inventory.push(new Item('Sword', 'items/sword0.png'))
           DialogView.show('Narrator', 'That looks like a pretty cool sword! You picked it up!')
           if (StateHelper.state == 2) StateHelper.state++
         } else {

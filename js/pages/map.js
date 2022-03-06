@@ -59,6 +59,11 @@ export default {
       </div>
       <Tutorial></Tutorial>
       <POverlay :data="{ i: counters.oneFourth?.count, fps: drawCompanion.fps, scale: scale, entities: [drawCompanion.renderedEntities, entities.length], position: entities[0]?.position, movement: entities[0]?.movement, interaction: interaction }"></POverlay>
+      <img v-if="entities[0]?.data?.equipped != null"
+        class="equipped"
+        :src="'./images/' + entities[0]?.data?.equipped?.texture"
+        :alt="entities[0]?.data?.equipped?.name">
+      </img>
       <p class="tip">{{ tip }}</p>
       <canvas ref="canvas"></canvas>
     </main>

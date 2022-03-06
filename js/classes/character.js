@@ -20,7 +20,8 @@ class Character extends Entity {
       health: 100,
       energy: 75,
       terror: 0,
-      inventory: []
+      inventory: [],
+      equipped: null
     }
 
     this.attackDamage = 5

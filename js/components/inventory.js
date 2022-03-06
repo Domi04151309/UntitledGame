@@ -33,12 +33,30 @@ export default {
         <img class="card inventory-selected" :src="selected != null ? './images/' + inventory[selected]?.texture : ''" :alt="selected != null ? inventory[selected]?.name : ''"></img>
         <div class="inventory-selected">
           <h2 class="mt-0">{{ selected != null ? inventory[selected]?.name : '' }}</h2>
-          <p class="mb-0">Press Q to scrap</p>
+          <div>
+            <button type="button" v-on:click="equipItem()">{{ inventory[selected]?.id == entity?.data?.equipped?.id ? 'Unequip' : 'Equip' }}</button>
+            <button type="button" v-on:click="scrapItem()">Scrap</button>
+          </div>
         </div>
       </div>
     </div>
   </div>`,
   methods: {
+    equipItem() {
+      if (this.inventory[this.selected]?.id == this.entity?.data?.equipped?.id) {
+        this.entity.data.equipped = null
+      } else {
+        this.entity.data.equipped = this.inventory[this.selected]
+      }
+    },
+    scrapItem() {
+      if (this.inventory[this.selected]?.id == this.entity?.data?.equipped?.id) {
+        this.entity.data.equipped = null
+      }
+      const selected = this.selected
+      this.selected = null
+      this.inventory.splice(selected, 1)
+    },
     onKeyDown(event) {
       if (event.keyCode == 69) {
         if (this.selected == null) {
@@ -47,10 +65,6 @@ export default {
         } else {
           this.selected = null
         }
-      } else if (event.keyCode == 81 && this.selected != null) {
-        const selected = this.selected
-        this.selected = null
-        this.inventory.splice(selected, 1)
       }
     }
   },

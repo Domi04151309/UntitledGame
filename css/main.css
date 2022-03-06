@@ -518,7 +518,7 @@ canvas {
   height: 100%;
   padding: 0;
 }
-.stats, .tutorial, .quest, .p-overlay, .tip {
+.stats, .tutorial, .quest, .equipped, .p-overlay, .tip {
   display: inline-block;
   position: fixed;
   margin: 16px;
@@ -573,6 +573,17 @@ canvas {
   left: 0;
   margin: 16px;
   z-index: 500;
+}
+.equipped {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 64px;
+  width: 64px;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  border: 2px solid var(--text-color-secondary);
+  border-radius: var(--border-radius-2x);
 }
 .tip {
   bottom: 0;
